@@ -1,0 +1,276 @@
+{% extends 'base.html' %}
+
+{% block title %}Welcome to FoodieHub{% endblock %}
+{% load static %}
+
+{% block content %}
+<style>
+    /* 🌟 Hero Section */
+    .hero {
+        background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)),
+                    url("{% static 'images/wall.jpg' %}") center/cover no-repeat;
+        height: 90vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        color: white;
+    }
+    .hero h1 {
+        font-size: 3rem;
+        margin-bottom: 10px;
+    }
+    .hero span {
+        color: #ff6600;
+    }
+    .btn-primary {
+        background-color: white;
+        color: #ff6600;
+        border: none;
+        padding: 12px 25px;
+        font-weight: bold;
+        cursor: pointer;
+        border-radius: 5px;
+    }
+    .btn-primary:hover {
+        background-color: #ff6600;
+        color: white;
+    }
+
+    /* 🌟 Section Defaults */
+    section {
+        padding: 60px 100px;
+        text-align: center;
+    }
+
+    /* 🌟 Specials Section */
+    .specials {
+        background-color: #fff8f2;
+        border-radius: 10px;
+    }
+    .specials-grid {
+        display: flex;
+        justify-content: center;
+        flex-wrap: wrap;
+        gap: 25px;
+        margin-top: 30px;
+    }
+    .card {
+        background-color: #fff;
+        padding: 20px;
+        border-radius: 12px;
+        width: 270px;
+        box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    .card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+    }
+    .card img {
+        width: 100%;
+        height: 200px;
+        object-fit: cover;
+        border-radius: 10px;
+        margin-bottom: 15px;
+    }
+    .card h3 {
+        font-size: 1.2rem;
+        color: #ff6600;
+        margin-bottom: 8px;
+    }
+    .card p {
+        font-size: 0.95rem;
+        color: #555;
+    }
+
+    /* 🌟 About, Testimonials, Contact Sections */
+    .about, .testimonials, .contact {
+        background-color: #f9f9f9;
+        border-radius: 10px;
+        margin: 40px auto;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    }
+
+    blockquote {
+        font-style: italic;
+        color: #555;
+        margin: 20px 0;
+    }
+</style>
+
+<!-- 🌟 Hero Section -->
+<section class="hero">
+    <div class="hero-content">
+        <h1>Welcome to <span>FoodieHub</span></h1>
+        <p>Delicious food delivered fresh to your table.</p>
+        <a href="{% url 'menu' %}">
+    <button class="btn-primary">Explore Menu</button>
+</a>
+
+    </div>
+</section>
+
+<!-- 🌟 Specials Section -->
+<section class="specials">
+    <h2>Today's Specials</h2>
+    <div class="specials-grid">
+        <div class="card">
+            <img src="{% static 'images/food1.jpg' %}" alt="Dish 1">
+            <h3>Grilled Chicken</h3>
+            <p>Juicy, tender, and full of flavor.</p>
+        </div>
+        <div class="card">
+            <img src="{% static 'images/food2.jpg' %}" alt="Dish 2">
+            <h3>Veggie Delight</h3>
+            <p>Fresh veggies tossed in our secret sauce.</p>
+        </div>
+        <div class="card">
+            <img src="{% static 'images/food3.jpg' %}" alt="Dish 3">
+            <h3>Pasta Alfredo</h3>
+            <p>Creamy, cheesy perfection in every bite.</p>
+        </div>
+    </div>
+</section>
+
+
+
+
+
+<!-- 🌟 Featured Image Section -->
+<section class="featured">
+    <div class="featured-container">
+        <!-- Left: Image -->
+        <div class="featured-image">
+            <img src="{% static 'images/bbwall.jpg' %}" alt="Featured Dish">
+        </div>
+        <!-- Middle: Text -->
+        <div class="featured-text">
+            <h2><strong>Delicious Flavors Await!</strong></h2>
+            <p>
+                Experience the perfect blend of taste and presentation. 
+                Our chefs craft every dish with <strong>fresh ingredients</strong> 
+                and attention to detail to make your meal unforgettable.
+            </p>
+        </div>
+        <!-- Right: Reservation Button -->
+        <div class="featured-button">
+            <a href="{% url 'reservation' %}" class="btn-reserve">
+                <i class="fas fa-calendar-alt"></i> Reserve Now
+            </a>
+        </div>
+    </div>
+</section>
+
+<style>
+@import url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css');
+
+.featured {
+    padding: 50px 20px;
+    background-color: #f9f9f9;
+}
+
+.featured-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 30px; /* Space between elements */
+    flex-wrap: wrap; /* Responsive for smaller screens */
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.featured-image img {
+    max-width: 350px; /* Reduced width for tighter layout */
+    width: 100%;
+    border-radius: 10px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+}
+
+.featured-text {
+    flex: 1; /* Take remaining space */
+    max-width: 450px;
+    margin: 0;
+}
+
+.featured-text h2 {
+    font-size: 2rem;
+    margin-bottom: 10px;
+}
+
+.featured-text p {
+    font-size: 1.1rem;
+    line-height: 1.5;
+    margin: 0;
+}
+
+/* Button styling */
+.featured-button {
+    display: flex;
+    align-items: center;
+}
+
+.btn-reserve {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    background-color: #ff6600;
+    color: white;
+    padding: 12px 25px;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: bold;
+    transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.btn-reserve i {
+    font-size: 1.2rem;
+}
+
+.btn-reserve:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 20px rgba(255,102,0,0.4);
+}
+
+/* Responsive: stack vertically on small screens */
+@media (max-width: 900px) {
+    .featured-container {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        gap: 15px;
+    }
+    
+    .featured-button {
+        margin-top: 10px;
+    }
+}
+</style>
+
+
+
+
+
+
+
+<!-- 🌟 About Section -->
+<section class="about">
+    <h2>About Us</h2>
+    <p>At FoodieHub, we believe great meals bring people together. 
+       Our chefs use fresh ingredients and a passion for taste to create 
+       unforgettable dining experiences.</p>
+</section>
+
+<!-- 🌟 Testimonials Section -->
+<section class="testimonials">
+    <h2>What Our Customers Say</h2>
+    <blockquote>"Best restaurant in town! Highly recommend the grilled chicken."</blockquote>
+    <blockquote>"Amazing food and ambiance. I’ll definitely be back!"</blockquote>
+</section>
+
+<!-- 🌟 Contact Section -->
+<section class="contact">
+    <h2>Contact Us</h2>
+    <p>Email: support@foodiehub.com | Phone: +91 9876543210</p>
+</section>
+{% endblock %}

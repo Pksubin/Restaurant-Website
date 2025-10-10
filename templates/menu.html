@@ -1,0 +1,726 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Menu | FoodieHub{% endblock %}
+{% block content %}
+<style>
+   /* Hero Banner */
+.menu-hero {
+    background: url("{% static 'images/menu-banner.jpg' %}") center/cover no-repeat;
+    height: 40vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    color: white;
+}
+
+    .menu-hero h1 {
+        font-size: 3rem;
+        margin: 0;
+        text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+    }
+    .menu-hero p {
+        font-size: 1.2rem;
+        margin-top: 10px;
+    }
+
+    /* Menu Container */
+    .menu-container {
+        padding: 60px 100px;
+        background-color: #f9f9f9;
+    }
+    
+    /* Category Section */
+    .menu-category {
+        margin-bottom: 60px;
+    }
+    .menu-category h2 {
+        font-size: 2.5rem;
+        color: #ff6600;
+        text-align: center;
+        margin-bottom: 40px;
+        position: relative;
+        padding-bottom: 15px;
+    }
+    .menu-category h2::after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 80px;
+        height: 4px;
+        background-color: #ff6600;
+        border-radius: 2px;
+    }
+
+    /* Menu Grid */
+    .menu-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 30px;
+        margin-top: 30px;
+    }
+
+    /* Modern Menu Card */
+    .menu-item {
+        background: white;
+        border-radius: 15px;
+        overflow: hidden;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+        transition: all 0.3s ease;
+        position: relative;
+    }
+    .menu-item:hover {
+        transform: translateY(-10px);
+        box-shadow: 0 8px 25px rgba(255,102,0,0.2);
+    }
+    
+    .menu-item-image {
+        position: relative;
+        overflow: hidden;
+        height: 220px;
+        cursor: pointer;
+    }
+    
+    .menu-item img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    
+    /* Full Image Zoom Effect on Hover - Only when hovering the image */
+    .menu-item-image:hover {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 90vw;
+        height: 90vh;
+        max-width: 1200px;
+        max-height: 800px;
+        z-index: 1000;
+        border-radius: 20px;
+        box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+        animation: zoomIn 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    
+    .menu-item-image:hover img {
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+        background-color: #000;
+    }
+    
+    /* Overlay backdrop when image is zoomed */
+    .menu-item-image:hover::before {
+        content: '';
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: rgba(0, 0, 0, 0.85);
+        z-index: -1;
+        animation: fadeIn 0.3s ease;
+    }
+    
+    /* Keep badge visible but move it with the zoomed image */
+    .menu-item-image:hover .badge {
+        z-index: 1;
+    }
+    
+    @keyframes zoomIn {
+        from {
+            transform: translate(-50%, -50%) scale(0.5);
+            opacity: 0;
+        }
+        to {
+            transform: translate(-50%, -50%) scale(1);
+            opacity: 1;
+        }
+    }
+    
+    @keyframes fadeIn {
+        from {
+            opacity: 0;
+        }
+        to {
+            opacity: 1;
+        }
+    }
+    
+    /* Badge for special items */
+    .badge {
+        position: absolute;
+        top: 15px;
+        right: 15px;
+        background-color: #ff6600;
+        color: white;
+        padding: 5px 12px;
+        border-radius: 20px;
+        font-size: 0.85rem;
+        font-weight: bold;
+        z-index: 1;
+        transition: opacity 0.2s ease;
+    }
+    .badge.new {
+        background-color: #28a745;
+    }
+    .badge.popular {
+        background-color: #ffc107;
+        color: #333;
+    }
+
+    .menu-item-content {
+        padding: 20px;
+        transition: opacity 0.2s ease;
+    }
+    .menu-item h3 {
+        font-size: 1.4rem;
+        color: #333;
+        margin-bottom: 8px;
+    }
+    .menu-item-description {
+        color: #666;
+        font-size: 0.95rem;
+        margin-bottom: 15px;
+        line-height: 1.5;
+    }
+    
+    .menu-item-footer {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-top: 15px;
+    }
+    .price {
+        font-size: 1.5rem;
+        font-weight: bold;
+        color: #ff6600;
+    }
+    .order-btn {
+        background-color: #ff6600;
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 25px;
+        cursor: pointer;
+        font-weight: bold;
+        transition: all 0.3s ease;
+    }
+    .order-btn:hover {
+        background-color: #e55a00;
+        transform: scale(1.05);
+    }
+
+    /* Featured Image Section */
+    .featured-section {
+        padding: 80px 100px;
+        background-color: white;
+    }
+    .featured-container {
+        display: flex;
+        align-items: center;
+        gap: 50px;
+        max-width: 1200px;
+        margin: 0 auto;
+    }
+    .featured-image {
+        flex: 1;
+    }
+    .featured-image img {
+        width: 100%;
+        border-radius: 15px;
+        box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+    }
+    .featured-content {
+        flex: 1;
+    }
+    .featured-content h2 {
+        font-size: 2.5rem;
+        color: #333;
+        margin-bottom: 20px;
+    }
+    .featured-content p {
+        font-size: 1.1rem;
+        color: #666;
+        line-height: 1.8;
+        margin-bottom: 25px;
+    }
+    .featured-btn {
+        display: inline-block;
+        background-color: #ff6600;
+        color: white;
+        padding: 15px 35px;
+        border-radius: 30px;
+        text-decoration: none;
+        font-weight: bold;
+        transition: all 0.3s ease;
+    }
+    .featured-btn:hover {
+        background-color: #e55a00;
+        transform: translateY(-3px);
+        box-shadow: 0 8px 20px rgba(255,102,0,0.3);
+    }
+
+    /* Testimonials Section */
+    .testimonials-section {
+        padding: 80px 100px;
+        background: linear-gradient(135deg, #fff8f2 0%, #ffe8d6 100%);
+    }
+    .testimonials-section h2 {
+        font-size: 2.5rem;
+        text-align: center;
+        color: #333;
+        margin-bottom: 50px;
+    }
+    .testimonials-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+        gap: 30px;
+        max-width: 1200px;
+        margin: 0 auto;
+    }
+    
+    .testimonial-card {
+        background: white;
+        border-radius: 15px;
+        padding: 30px;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+        transition: all 0.3s ease;
+        position: relative;
+    }
+    .testimonial-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 25px rgba(0,0,0,0.12);
+    }
+    
+    .testimonial-header {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        margin-bottom: 20px;
+    }
+    .testimonial-image {
+        width: 60px;
+        height: 60px;
+        border-radius: 50%;
+        overflow: hidden;
+        border: 3px solid #ff6600;
+    }
+    .testimonial-image img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+    .testimonial-info h4 {
+        margin: 0;
+        color: #333;
+        font-size: 1.1rem;
+    }
+    .testimonial-info p {
+        margin: 5px 0 0 0;
+        color: #999;
+        font-size: 0.9rem;
+    }
+    
+    .rating {
+        color: #ffc107;
+        font-size: 1.2rem;
+        margin-bottom: 15px;
+    }
+    
+    .testimonial-text {
+        color: #666;
+        font-style: italic;
+        line-height: 1.6;
+        font-size: 0.95rem;
+    }
+    
+    .quote-icon {
+        position: absolute;
+        top: 20px;
+        right: 20px;
+        font-size: 3rem;
+        color: #ff660020;
+    }
+
+    /* Responsive Design */
+    @media (max-width: 768px) {
+        .menu-container,
+        .featured-section,
+        .testimonials-section {
+            padding: 40px 20px;
+        }
+        .menu-hero h1 {
+            font-size: 2rem;
+        }
+        .featured-container {
+            flex-direction: column;
+            gap: 30px;
+        }
+        .menu-grid {
+            grid-template-columns: 1fr;
+        }
+        
+        .menu-item-image:hover {
+            width: 95vw;
+            height: 70vh;
+        }
+    }
+</style>
+
+<!-- Hero Section -->
+<section class="menu-hero">
+    <div>
+        <h1>Our Delicious Menu</h1>
+        <p>Crafted with passion, served with love</p>
+    </div>
+</section>
+
+<!-- Menu Container -->
+<section class="menu-container">
+    
+    <!-- Appetizers -->
+    <div class="menu-category">
+        <h2>🍽️ Appetizers</h2>
+        <div class="menu-grid">
+            <div class="menu-item">
+                <div class="menu-item-image">
+                    <span class="badge popular">Popular</span>
+                    <img src="{% static 'images/appetizer1.jpeg' %}" alt="Spring Rolls">
+                </div>
+                <div class="menu-item-content">
+                    <h3>Crispy Spring Rolls</h3>
+                    <p class="menu-item-description">Golden fried rolls filled with fresh vegetables and herbs</p>
+                    <div class="menu-item-footer">
+                        <span class="price">₹150</span>
+                        <button class="order-btn">Order Now</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="menu-item">
+                <div class="menu-item-image">
+                    <span class="badge new">New</span>
+                    <img src="{% static 'images/appetizer2.jpeg' %}" alt="Garlic Bread">
+                </div>
+                <div class="menu-item-content">
+                    <h3>Garlic Bread Supreme</h3>
+                    <p class="menu-item-description">Toasted bread with garlic butter and mozzarella cheese</p>
+                    <div class="menu-item-footer">
+                        <span class="price">₹120</span>
+                        <button class="order-btn">Order Now</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="menu-item">
+                <div class="menu-item-image">
+                    <img src="{% static 'images/appetizer3.webp' %}" alt="Chicken Wings">
+                </div>
+                <div class="menu-item-content">
+                    <h3>Buffalo Wings</h3>
+                    <p class="menu-item-description">Spicy chicken wings with ranch dipping sauce</p>
+                    <div class="menu-item-footer">
+                        <span class="price">₹200</span>
+                        <button class="order-btn">Order Now</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Course -->
+    <div class="menu-category">
+        <h2>🍖 Main Course</h2>
+        <div class="menu-grid">
+            <div class="menu-item">
+                <div class="menu-item-image">
+                    <span class="badge">Chef's Special</span>
+                    <img src="{% static 'images/main1.jpg' %}" alt="Grilled Chicken">
+                </div>
+                <div class="menu-item-content">
+                    <h3>Grilled Chicken Platter</h3>
+                    <p class="menu-item-description">Perfectly grilled chicken with herbs and spices</p>
+                    <div class="menu-item-footer">
+                        <span class="price">₹350</span>
+                        <button class="order-btn">Order Now</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="menu-item">
+                <div class="menu-item-image">
+                    <img src="{% static 'images/main2.jpg' %}" alt="Pasta">
+                </div>
+                <div class="menu-item-content">
+                    <h3>Pasta Alfredo</h3>
+                    <p class="menu-item-description">Creamy Italian pasta with parmesan cheese</p>
+                    <div class="menu-item-footer">
+                        <span class="price">₹280</span>
+                        <button class="order-btn">Order Now</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="menu-item">
+                <div class="menu-item-image">
+                    <span class="badge popular">Popular</span>
+                    <img src="{% static 'images/main3.webp' %}" alt="Pizza">
+                </div>
+                <div class="menu-item-content">
+                    <h3>Margherita Pizza</h3>
+                    <p class="menu-item-description">Classic pizza with fresh mozzarella and basil</p>
+                    <div class="menu-item-footer">
+                        <span class="price">₹320</span>
+                        <button class="order-btn">Order Now</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="menu-item">
+                <div class="menu-item-image">
+                    <img src="{% static 'images/main4.jpg' %}" alt="Biryani">
+                </div>
+                <div class="menu-item-content">
+                    <h3>Hyderabadi Biryani</h3>
+                    <p class="menu-item-description">Aromatic rice with tender meat and exotic spices</p>
+                    <div class="menu-item-footer">
+                        <span class="price">₹380</span>
+                        <button class="order-btn">Order Now</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="menu-item">
+                <div class="menu-item-image">
+                    <span class="badge new">New</span>
+                    <img src="{% static 'images/main5.jpg' %}" alt="Burger">
+                </div>
+                <div class="menu-item-content">
+                    <h3>Gourmet Burger</h3>
+                    <p class="menu-item-description">Juicy beef patty with premium toppings and fries</p>
+                    <div class="menu-item-footer">
+                        <span class="price">₹290</span>
+                        <button class="order-btn">Order Now</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Desserts -->
+    <div class="menu-category">
+        <h2>🍰 Desserts</h2>
+        <div class="menu-grid">
+            <div class="menu-item">
+                <div class="menu-item-image">
+                    <span class="badge popular">Popular</span>
+                    <img src="{% static 'images/dessert1.jpg' %}" alt="Chocolate Cake">
+                </div>
+                <div class="menu-item-content">
+                    <h3>Chocolate Lava Cake</h3>
+                    <p class="menu-item-description">Warm chocolate cake with molten center</p>
+                    <div class="menu-item-footer">
+                        <span class="price">₹180</span>
+                        <button class="order-btn">Order Now</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="menu-item">
+                <div class="menu-item-image">
+                    <img src="{% static 'images/dessert2.jpg' %}" alt="Ice Cream">
+                </div>
+                <div class="menu-item-content">
+                    <h3>Artisan Ice Cream</h3>
+                    <p class="menu-item-description">Three scoops of handcrafted premium ice cream</p>
+                    <div class="menu-item-footer">
+                        <span class="price">₹150</span>
+                        <button class="order-btn">Order Now</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="menu-item">
+                <div class="menu-item-image">
+                    <span class="badge new">New</span>
+                    <img src="{% static 'images/dessert3.jpg' %}" alt="Tiramisu">
+                </div>
+                <div class="menu-item-content">
+                    <h3>Classic Tiramisu</h3>
+                    <p class="menu-item-description">Italian coffee-flavored dessert with mascarpone</p>
+                    <div class="menu-item-footer">
+                        <span class="price">₹200</span>
+                        <button class="order-btn">Order Now</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Beverages -->
+    <div class="menu-category">
+        <h2>☕ Beverages</h2>
+        <div class="menu-grid">
+            <div class="menu-item">
+                <div class="menu-item-image">
+                    <img src="{% static 'images/beverage1.jpg' %}" alt="Smoothie">
+                </div>
+                <div class="menu-item-content">
+                    <h3>Tropical Smoothie</h3>
+                    <p class="menu-item-description">Fresh fruit blend with yogurt and honey</p>
+                    <div class="menu-item-footer">
+                        <span class="price">₹120</span>
+                        <button class="order-btn">Order Now</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="menu-item">
+                <div class="menu-item-image">
+                    <span class="badge popular">Popular</span>
+                    <img src="{% static 'images/beverage2.jpg' %}" alt="Coffee">
+                </div>
+                <div class="menu-item-content">
+                    <h3>Caramel Macchiato</h3>
+                    <p class="menu-item-description">Espresso with steamed milk and caramel drizzle</p>
+                    <div class="menu-item-footer">
+                        <span class="price">₹140</span>
+                        <button class="order-btn">Order Now</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="menu-item">
+                <div class="menu-item-image">
+                    <img src="{% static 'images/beverage3.jpeg' %}" alt="Mocktail">
+                </div>
+                <div class="menu-item-content">
+                    <h3>Virgin Mojito</h3>
+                    <p class="menu-item-description">Refreshing mint and lime mocktail</p>
+                    <div class="menu-item-footer">
+                        <span class="price">₹100</span>
+                        <button class="order-btn">Order Now</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Featured Image Section -->
+<section class="featured-section">
+    <div class="featured-container">
+        <div class="featured-image">
+            <img src="{% static 'images/chef-special.jpg' %}" alt="Chef's Special">
+        </div>
+        <div class="featured-content">
+            <h2>Chef's Signature Experience</h2>
+            <p>Every dish at FoodieHub is a masterpiece crafted by our award-winning chefs. We use only the freshest ingredients sourced locally to bring you an unforgettable dining experience. From traditional favorites to innovative fusion dishes, our menu celebrates the art of culinary excellence.</p>
+            <p>Join us for a gastronomic journey that will delight your senses and create lasting memories with every bite.</p>
+            <a href="{% url 'reservation' %}" class="featured-btn">Book Your Table</a>
+        </div>
+    </div>
+</section>
+
+<!-- Testimonials Section -->
+<section class="testimonials-section">
+    <h2>What Our Guests Say</h2>
+    <div class="testimonials-grid">
+        <div class="testimonial-card">
+            <span class="quote-icon">"</span>
+            <div class="testimonial-header">
+                <div class="testimonial-image">
+                    <img src="{% static 'images/customer1.jpg' %}" alt="Customer 1">
+                </div>
+                <div class="testimonial-info">
+                    <h4>Priya Sharma</h4>
+                    <p>Food Blogger</p>
+                </div>
+            </div>
+            <div class="rating">★★★★★</div>
+            <p class="testimonial-text">The best dining experience I've had in years! The grilled chicken was absolutely divine, and the service was impeccable. FoodieHub has become my go-to place for special occasions.</p>
+        </div>
+
+        <div class="testimonial-card">
+            <span class="quote-icon">"</span>
+            <div class="testimonial-header">
+                <div class="testimonial-image">
+                    <img src="{% static 'images/customer2.avif' %}" alt="Customer 2">
+                </div>
+                <div class="testimonial-info">
+                    <h4>Rajesh Kumar</h4>
+                    <p>Business Professional</p>
+                </div>
+            </div>
+            <div class="rating">★★★★★</div>
+            <p class="testimonial-text">Outstanding food quality and presentation! The Hyderabadi Biryani reminded me of home. The ambiance is perfect for both business meetings and family dinners.</p>
+        </div>
+
+        <div class="testimonial-card">
+            <span class="quote-icon">"</span>
+            <div class="testimonial-header">
+                <div class="testimonial-image">
+                    <img src="{% static 'images/customer3.jpg' %}" alt="Customer 3">
+                </div>
+                <div class="testimonial-info">
+                    <h4>Sneha Patel</h4>
+                    <p>Interior Designer</p>
+                </div>
+            </div>
+            <div class="rating">★★★★★</div>
+            <p class="testimonial-text">A culinary masterpiece! From appetizers to desserts, every dish exceeded my expectations. The chocolate lava cake is to die for. Highly recommended!</p>
+        </div>
+
+        <div class="testimonial-card">
+            <span class="quote-icon">"</span>
+            <div class="testimonial-header">
+                <div class="testimonial-image">
+                    <img src="{% static 'images/customer4.jpg' %}" alt="Customer 4">
+                </div>
+                <div class="testimonial-info">
+                    <h4>Amit Verma</h4>
+                    <p>Tech Entrepreneur</p>
+                </div>
+            </div>
+            <div class="rating">★★★★★</div>
+            <p class="testimonial-text">FoodieHub never disappoints! The pasta alfredo is authentic Italian perfection. Great value for money and the staff always makes you feel welcome.</p>
+        </div>
+
+        <div class="testimonial-card">
+            <span class="quote-icon">"</span>
+            <div class="testimonial-header">
+                <div class="testimonial-image">
+                    <img src="{% static 'images/customer5.webp' %}" alt="Customer 5">
+                </div>
+                <div class="testimonial-info">
+                    <h4>Neha Reddy</h4>
+                    <p>Fashion Designer</p>
+                </div>
+            </div>
+            <div class="rating">★★★★★</div>
+            <p class="testimonial-text">The aesthetic presentation and taste are both incredible! Love bringing my clients here. The tropical smoothie is my favorite refreshment.</p>
+        </div>
+
+        <div class="testimonial-card">
+            <span class="quote-icon">"</span>
+            <div class="testimonial-header">
+                <div class="testimonial-image">
+                    <img src="{% static 'images/customer6.jpg' %}" alt="Customer 6">
+                </div>
+                <div class="testimonial-info">
+                    <h4>Vikram Singh</h4>
+                    <p>Fitness Coach</p>
+                </div>
+            </div>
+            <div class="rating">★★★★★</div>
+            <p class="testimonial-text">Finally, a restaurant that offers both healthy and delicious options! The veggie delight bowl is packed with nutrition and flavor. Perfect for health-conscious foodies.</p>
+        </div>
+    </div>
+</section>
+
+{% endblock %}

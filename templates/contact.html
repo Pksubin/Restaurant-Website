@@ -1,0 +1,364 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Contact | FoodieHub{% endblock %}
+{% block content %}
+<style>
+    /* Hero Section */
+    .contact-hero {
+        background: 
+                    url("{% static 'images/contact-banner.jpg' %}") center/cover no-repeat;
+        height: 40vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        text-align: center;
+    }
+    .contact-hero h1 {
+        font-size: 3rem;
+        margin: 0;
+        text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+    }
+    .contact-hero p {
+        font-size: 1.2rem;
+        margin-top: 10px;
+    }
+
+    /* Main Container */
+    .contact-container {
+        padding: 80px 100px;
+        background-color: #f9f9f9;
+    }
+
+    .contact-wrapper {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 50px;
+        max-width: 1200px;
+        margin: 0 auto;
+    }
+
+    /* Contact Form */
+    .contact-form-section {
+        background: white;
+        border-radius: 15px;
+        padding: 40px;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+    }
+    .contact-form-section h2 {
+        font-size: 2rem;
+        color: #333;
+        margin-bottom: 10px;
+    }
+    .contact-form-section p {
+        color: #666;
+        margin-bottom: 30px;
+    }
+
+    .form-group {
+        margin-bottom: 20px;
+    }
+    .form-group label {
+        display: block;
+        color: #333;
+        font-weight: 600;
+        margin-bottom: 8px;
+        font-size: 0.95rem;
+    }
+    .form-group input,
+    .form-group textarea {
+        width: 100%;
+        padding: 12px 15px;
+        border: 2px solid #e0e0e0;
+        border-radius: 8px;
+        font-size: 1rem;
+        transition: all 0.3s ease;
+        font-family: inherit;
+    }
+    .form-group input:focus,
+    .form-group textarea:focus {
+        outline: none;
+        border-color: #ff6600;
+        box-shadow: 0 0 0 3px rgba(255,102,0,0.1);
+    }
+    .form-group textarea {
+        resize: vertical;
+        min-height: 120px;
+    }
+
+    .submit-btn {
+        width: 100%;
+        background-color: #ff6600;
+        color: white;
+        border: none;
+        padding: 15px;
+        border-radius: 8px;
+        font-size: 1.1rem;
+        font-weight: bold;
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+    .submit-btn:hover {
+        background-color: #e55b00;
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(255,102,0,0.3);
+    }
+
+    /* Contact Info Section */
+    .contact-info-section {
+        display: flex;
+        flex-direction: column;
+        gap: 25px;
+    }
+
+    .info-card {
+        background: white;
+        border-radius: 15px;
+        padding: 30px;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+        transition: all 0.3s ease;
+    }
+    .info-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 25px rgba(0,0,0,0.12);
+    }
+
+    .info-card-header {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        margin-bottom: 15px;
+    }
+    .info-icon {
+        width: 50px;
+        height: 50px;
+        background: linear-gradient(135deg, #ff6600 0%, #ff8833 100%);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-size: 1.5rem;
+    }
+    .info-card h3 {
+        font-size: 1.3rem;
+        color: #333;
+        margin: 0;
+    }
+    .info-card p {
+        color: #666;
+        margin: 5px 0;
+        line-height: 1.6;
+    }
+    .info-card a {
+        color: #ff6600;
+        text-decoration: none;
+        font-weight: 600;
+    }
+    .info-card a:hover {
+        text-decoration: underline;
+    }
+
+    /* Map Section */
+    .map-section {
+        background: white;
+        border-radius: 15px;
+        padding: 30px;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+    }
+    .map-section h3 {
+        font-size: 1.3rem;
+        color: #333;
+        margin-bottom: 20px;
+    }
+    .map-placeholder {
+        width: 100%;
+        height: 300px;
+        background: linear-gradient(135deg, #fff8f2 0%, #ffe8d6 100%);
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #999;
+        font-size: 1.1rem;
+        border: 2px dashed #e0e0e0;
+    }
+
+    /* Social Media Section */
+    .social-section {
+        text-align: center;
+        padding: 60px 100px;
+        background-color: white;
+    }
+    .social-section h2 {
+        font-size: 2rem;
+        color: #333;
+        margin-bottom: 30px;
+    }
+    .social-icons {
+        display: flex;
+        justify-content: center;
+        gap: 20px;
+        flex-wrap: wrap;
+    }
+    .social-icon {
+        width: 60px;
+        height: 60px;
+        background: white;
+        border: 2px solid #e0e0e0;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.5rem;
+        color: #666;
+        transition: all 0.3s ease;
+        text-decoration: none;
+    }
+    .social-icon:hover {
+        background-color: #ff6600;
+        color: white;
+        border-color: #ff6600;
+        transform: translateY(-5px);
+        box-shadow: 0 5px 15px rgba(255,102,0,0.3);
+    }
+
+    /* Responsive */
+    @media (max-width: 968px) {
+        .contact-wrapper {
+            grid-template-columns: 1fr;
+            gap: 30px;
+        }
+        .contact-container,
+        .social-section {
+            padding: 40px 20px;
+        }
+        .contact-hero h1 {
+            font-size: 2rem;
+        }
+    }
+</style>
+
+<!-- Hero Section -->
+<section class="contact-hero">
+    <div>
+        <h1>Get In Touch</h1>
+        <p>We'd love to hear from you!</p>
+    </div>
+</section>
+
+<!-- Main Content -->
+<section class="contact-container">
+    <div class="contact-wrapper">
+        <!-- Contact Form -->
+        <div class="contact-form-section">
+            <h2>Send Us a Message</h2>
+            <p>Have a question or feedback? Fill out the form below and we'll get back to you soon.</p>
+            <form method="POST">
+                {% csrf_token %}
+                <div class="form-group">
+                    <label for="name">Full Name *</label>
+                    <input type="text" id="name" name="name" placeholder="Enter your name" required>
+                </div>
+                <div class="form-group">
+                    <label for="email">Email Address *</label>
+                    <input type="email" id="email" name="email" placeholder="your.email@example.com" required>
+                </div>
+                <div class="form-group">
+                    <label for="phone">Phone Number</label>
+                    <input type="tel" id="phone" name="phone" placeholder="+91 XXXXX XXXXX">
+                </div>
+                <div class="form-group">
+                    <label for="message">Your Message *</label>
+                    <textarea id="message" name="message" placeholder="Tell us what's on your mind..." required></textarea>
+                </div>
+                <button type="submit" class="submit-btn">Send Message</button>
+            </form>
+        </div>
+
+        <!-- Contact Info -->
+        <div class="contact-info-section">
+            <!-- Location -->
+            <div class="info-card">
+                <div class="info-card-header">
+                    <div class="info-icon">📍</div>
+                    <h3>Visit Us</h3>
+                </div>
+                <p>123 Food Street, Culinary District<br>Mumbai, Maharashtra 400001<br>India</p>
+            </div>
+
+            <!-- Phone -->
+            <div class="info-card">
+                <div class="info-card-header">
+                    <div class="info-icon">📞</div>
+                    <h3>Call Us</h3>
+                </div>
+                <p>
+                    Main: <a href="tel:+919876543210">+91 98765 43210</a><br>
+                    Reservations: <a href="tel:+919876543211">+91 98765 43211</a><br>
+                    Mon-Sun: 11:00 AM - 11:00 PM
+                </p>
+            </div>
+
+            <!-- Email -->
+            <div class="info-card">
+                <div class="info-card-header">
+                    <div class="info-icon">✉️</div>
+                    <h3>Email Us</h3>
+                </div>
+                <p>
+                    General: <a href="mailto:support@foodiehub.com">support@foodiehub.com</a><br>
+                    Reservations: <a href="mailto:bookings@foodiehub.com">bookings@foodiehub.com</a><br>
+                    Catering: <a href="mailto:catering@foodiehub.com">catering@foodiehub.com</a>
+                </p>
+            </div>
+
+            <!-- Map -->
+            <div class="map-section">
+                <h3>Find Us Here</h3>
+           <div class="map-placeholder" style="width: 100%; height: 400px; border-radius: 10px; overflow: hidden;">
+    <iframe
+        src="https://www.google.com/maps/embed?pb=!1m14!1m12!1m3!1d15958.372989210228!2d75.469428!3d11.8630032!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!5e0!3m2!1sen!2sin!4v1696947034567!5m2!1sen!2sin"
+        width="100%"
+        height="100%"
+        style="border:0;"
+        allowfullscreen=""
+        loading="lazy"
+        referrerpolicy="no-referrer-when-downgrade">
+    </iframe>
+</div>
+
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Social Media Section -->
+<section class="social-section">
+    <h2>Connect With Us</h2>
+    <div class="social-icons">
+        <a href="#" class="social-icon" aria-label="Facebook">
+            <i class="fab fa-facebook-f"></i>
+        </a>
+        <a href="#" class="social-icon" aria-label="Instagram">
+            <i class="fab fa-instagram"></i>
+        </a>
+        <a href="#" class="social-icon" aria-label="Twitter">
+            <i class="fab fa-twitter"></i>
+        </a>
+        <a href="#" class="social-icon" aria-label="YouTube">
+            <i class="fab fa-youtube"></i>
+        </a>
+        <a href="#" class="social-icon" aria-label="LinkedIn">
+            <i class="fab fa-linkedin-in"></i>
+        </a>
+        <a href="#" class="social-icon" aria-label="WhatsApp">
+            <i class="fab fa-whatsapp"></i>
+        </a>
+    </div>
+</section>
+
+<!-- Font Awesome -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+{% endblock %}

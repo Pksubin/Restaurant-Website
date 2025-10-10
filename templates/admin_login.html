@@ -1,0 +1,146 @@
+{% extends 'base.html' %}
+
+{% block title %}Admin Login{% endblock %}
+
+{% block content %}
+<style>
+    body {
+        background: #f4f6f8;
+    }
+
+    .login-container {
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 20px;
+    }
+
+    .login-box {
+        background: white;
+        border-radius: 16px;
+        padding: 45px 40px;
+        box-shadow: 0 6px 25px rgba(0, 0, 0, 0.1);
+        width: 100%;
+        max-width: 400px;
+        animation: fadeIn 0.5s ease;
+    }
+
+    @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(20px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+
+    .login-box h2 {
+        text-align: center;
+        color: #333;
+        margin-bottom: 25px;
+        font-size: 1.8rem;
+        font-weight: 700;
+    }
+
+    .message-box {
+        background: #ffeaea;
+        border-left: 4px solid #e63946;
+        padding: 12px 15px;
+        border-radius: 8px;
+        margin-bottom: 15px;
+        color: #c53030;
+        font-size: 14px;
+    }
+
+    form {
+        display: flex;
+        flex-direction: column;
+        gap: 18px;
+    }
+
+    .input-group {
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+    }
+
+    .login-box input[type="text"],
+    .login-box input[type="password"] {
+        width: 100%;
+        padding: 14px 16px;
+        border: 1.8px solid #d0d7de;
+        border-radius: 8px;
+        font-size: 15px;
+        background: #fafafa;
+        transition: 0.3s ease;
+    }
+
+    .login-box input:focus {
+        outline: none;
+        border-color: #ff6600;
+        background: white;
+        box-shadow: 0 0 0 3px rgba(255, 102, 0, 0.1);
+    }
+
+    .login-box button {
+        padding: 14px;
+        background: linear-gradient(135deg, #ff6600, #ff8c42);
+        color: white;
+        border: none;
+        border-radius: 8px;
+        font-size: 16px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        margin-top: 10px;
+    }
+
+    .login-box button:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 18px rgba(255, 102, 0, 0.3);
+    }
+
+    .login-footer {
+        text-align: center;
+        margin-top: 25px;
+        color: #888;
+        font-size: 14px;
+    }
+
+    @media (max-width: 480px) {
+        .login-box {
+            padding: 35px 25px;
+        }
+
+        .login-box h2 {
+            font-size: 1.5rem;
+        }
+    }
+</style>
+
+<div class="login-container">
+    <div class="login-box">
+        <h2>🔐 Admin Login</h2>
+
+        {% if messages %}
+            {% for message in messages %}
+                <div class="message-box">{{ message }}</div>
+            {% endfor %}
+        {% endif %}
+
+        <form method="POST" action="">
+            {% csrf_token %}
+            <div class="input-group">
+                <label for="username">Username</label>
+                <input id="username" type="text" name="username" placeholder="Enter username" required>
+            </div>
+            <div class="input-group">
+                <label for="password">Password</label>
+                <input id="password" type="password" name="password" placeholder="Enter password" required>
+            </div>
+            <button type="submit">Login</button>
+        </form>
+
+        <div class="login-footer">
+            <p>🍽️ FoodieHub Admin Portal</p>
+        </div>
+    </div>
+</div>
+{% endblock %}

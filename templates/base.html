@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}FoodieHub{% endblock %}</title>
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            margin: 0;
+            padding: 0;
+            color: #333;
+        }
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 50px;
+            background-color: #ff6600;
+            color: #fff;
+        }
+        .nav-links {
+            list-style: none;
+            display: flex;
+            gap: 20px;
+        }
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            font-weight: bold;
+        }
+        footer {
+            background-color: #222;
+            color: #fff;
+            padding: 20px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+
+    <nav class="navbar">
+        <div class="logo">🍽️ FoodieHub</div>
+        <ul class="nav-links">
+            <li><a href="{% url 'landing' %}" class="{% if request.resolver_match.url_name == 'landing' %}active-link{% endif %}">Home</a></li>
+<li><a href="{% url 'menu' %}" class="{% if request.resolver_match.url_name == 'menu' %}active-link{% endif %}">Menu</a></li>
+<li><a href="{% url 'reservation' %}" class="{% if request.resolver_match.url_name == 'reservation' %}active-link{% endif %}">Reservation</a></li>
+<li><a href="{% url 'contact' %}" class="{% if request.resolver_match.url_name == 'contact' %}active-link{% endif %}">Contact</a></li>
+<li><a href="{% url 'admin-login' %}" class="{% if request.resolver_match.url_name == 'admin-login' %}active-link{% endif %}">Login</a></li>
+
+        </ul>
+    </nav>
+
+    {% block content %}{% endblock %}
+
+    <footer>
+        <p>&copy; 2025 FoodieHub | Designed with ❤️ by Subin</p>
+    </footer>
+
+</body>
+</html>
