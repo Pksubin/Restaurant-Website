@@ -15,14 +15,57 @@
         justify-content: center;
         text-align: center;
         color: white;
+        position: relative;
+        overflow: hidden;
     }
+    
+    .hero-content {
+        position: relative;
+        z-index: 2;
+    }
+    
     .hero h1 {
         font-size: 3rem;
         margin-bottom: 10px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 15px;
+        flex-wrap: wrap;
     }
+    
+    /* Animation for "Welcome" - from top left */
+    .word-welcome {
+        animation: slideFromTopLeft 1.2s cubic-bezier(0.68, -0.55, 0.265, 1.55) forwards;
+        opacity: 0;
+    }
+
+    /* Animation for "to" - from top center */
+    .word-to {
+        animation: slideFromTopCenter 1.2s cubic-bezier(0.68, -0.55, 0.265, 1.55) 0.3s forwards;
+        opacity: 0;
+    }
+
+    /* Animation for "FoodieHub" - from top right */
+    .word-foodiehub {
+        color: #ff6600;
+        animation: slideFromTopRight 1.2s cubic-bezier(0.68, -0.55, 0.265, 1.55) 0.6s forwards;
+        opacity: 0;
+        text-shadow: 0 0 20px rgba(255, 102, 0, 0.5);
+    }
+    
     .hero span {
         color: #ff6600;
     }
+    
+    /* Tagline animation - fade in with bounce */
+    .hero p {
+        font-size: 1.3rem;
+        animation: fadeInBounce 1s ease-out 1.5s forwards;
+        opacity: 0;
+        margin-bottom: 25px;
+    }
+    
     .btn-primary {
         background-color: white;
         color: #ff6600;
@@ -31,10 +74,154 @@
         font-weight: bold;
         cursor: pointer;
         border-radius: 5px;
+        font-size: 1.1rem;
+        animation: buttonAppear 0.8s ease-out 2s forwards;
+        opacity: 0;
+        transform: scale(0);
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 15px rgba(255, 102, 0, 0.3);
     }
+    
     .btn-primary:hover {
         background-color: #ff6600;
         color: white;
+        transform: scale(1.1);
+        box-shadow: 0 8px 25px rgba(255, 102, 0, 0.6);
+    }
+    
+    /* Floating particles effect */
+    .particle {
+        position: absolute;
+        width: 8px;
+        height: 8px;
+        background: rgba(255, 255, 255, 0.6);
+        border-radius: 50%;
+        animation: float 6s infinite ease-in-out;
+    }
+
+    .particle:nth-child(1) { left: 10%; top: 20%; animation-delay: 0s; }
+    .particle:nth-child(2) { left: 20%; top: 80%; animation-delay: 1s; }
+    .particle:nth-child(3) { left: 80%; top: 30%; animation-delay: 2s; }
+    .particle:nth-child(4) { left: 70%; top: 70%; animation-delay: 1.5s; }
+    .particle:nth-child(5) { left: 50%; top: 10%; animation-delay: 0.5s; }
+    .particle:nth-child(6) { left: 30%; top: 50%; animation-delay: 2.5s; }
+
+    /* Keyframe Animations */
+    @keyframes slideFromTopLeft {
+        0% {
+            transform: translate(-200px, -200px) rotate(-20deg);
+            opacity: 0;
+        }
+        100% {
+            transform: translate(0, 0) rotate(0);
+            opacity: 1;
+        }
+    }
+
+    @keyframes slideFromTopCenter {
+        0% {
+            transform: translateY(-200px) scale(0.5);
+            opacity: 0;
+        }
+        100% {
+            transform: translateY(0) scale(1);
+            opacity: 1;
+        }
+    }
+
+    @keyframes slideFromTopRight {
+        0% {
+            transform: translate(200px, -200px) rotate(20deg);
+            opacity: 0;
+        }
+        100% {
+            transform: translate(0, 0) rotate(0);
+            opacity: 1;
+        }
+    }
+
+    @keyframes fadeInBounce {
+        0% {
+            transform: translateY(30px);
+            opacity: 0;
+        }
+        60% {
+            transform: translateY(-10px);
+            opacity: 1;
+        }
+        100% {
+            transform: translateY(0);
+            opacity: 1;
+        }
+    }
+
+    @keyframes buttonAppear {
+        0% {
+            transform: scale(0) rotate(-180deg);
+            opacity: 0;
+        }
+        70% {
+            transform: scale(1.2) rotate(10deg);
+        }
+        100% {
+            transform: scale(1) rotate(0);
+            opacity: 1;
+        }
+    }
+
+    @keyframes float {
+        0%, 100% {
+            transform: translateY(0) translateX(0);
+            opacity: 0.3;
+        }
+        50% {
+            transform: translateY(-30px) translateX(20px);
+            opacity: 0.8;
+        }
+    }
+    
+    @keyframes fadeInUp {
+        from {
+            opacity: 0;
+            transform: translateY(30px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+    
+    @keyframes scaleIn {
+        from {
+            opacity: 0;
+            transform: scale(0.8);
+        }
+        to {
+            opacity: 1;
+            transform: scale(1);
+        }
+    }
+    
+    @keyframes slideInLeft {
+        from {
+            opacity: 0;
+            transform: translateX(-50px);
+        }
+        to {
+            opacity: 1;
+            transform: translateX(0);
+        }
+    }
+    
+    @keyframes slideInRight {
+        from {
+            opacity: 0;
+            transform: translateX(50px);
+        }
+        to {
+            opacity: 1;
+            transform: translateX(0);
+        }
     }
 
     /* 🌟 Section Defaults */
@@ -48,6 +235,16 @@
         background-color: #fff8f2;
         border-radius: 10px;
     }
+    
+    .specials h2 {
+        opacity: 0;
+        transition: all 0.8s ease-out;
+    }
+    
+    .specials h2.animate {
+        animation: fadeInUp 0.8s ease-out forwards;
+    }
+    
     .specials-grid {
         display: flex;
         justify-content: center;
@@ -55,6 +252,7 @@
         gap: 25px;
         margin-top: 30px;
     }
+    
     .card {
         background-color: #fff;
         padding: 20px;
@@ -62,23 +260,49 @@
         width: 270px;
         box-shadow: 0 4px 10px rgba(0,0,0,0.1);
         transition: transform 0.3s ease, box-shadow 0.3s ease;
+        opacity: 0;
     }
+    
+    .card.animate {
+        animation: scaleIn 0.6s ease-out forwards;
+    }
+    
+    .card:nth-child(1) {
+        animation-delay: 0.2s;
+    }
+    
+    .card:nth-child(2) {
+        animation-delay: 0.4s;
+    }
+    
+    .card:nth-child(3) {
+        animation-delay: 0.6s;
+    }
+    
     .card:hover {
-        transform: translateY(-5px);
+        transform: translateY(-5px) rotate(2deg);
         box-shadow: 0 8px 20px rgba(0,0,0,0.15);
     }
+    
     .card img {
         width: 100%;
         height: 200px;
         object-fit: cover;
         border-radius: 10px;
         margin-bottom: 15px;
+        transition: transform 0.3s ease;
     }
+    
+    .card:hover img {
+        transform: scale(1.05);
+    }
+    
     .card h3 {
         font-size: 1.2rem;
         color: #ff6600;
         margin-bottom: 8px;
     }
+    
     .card p {
         font-size: 0.95rem;
         color: #555;
@@ -90,24 +314,172 @@
         border-radius: 10px;
         margin: 40px auto;
         box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        opacity: 0;
+        transition: all 0.8s ease-out;
+    }
+    
+    .about.animate, .testimonials.animate, .contact.animate {
+        animation: fadeInUp 0.8s ease-out forwards;
     }
 
     blockquote {
         font-style: italic;
         color: #555;
         margin: 20px 0;
+        opacity: 0;
+        transition: all 0.6s ease-out;
+    }
+    
+    blockquote.animate-left {
+        animation: slideInLeft 0.6s ease-out forwards;
+    }
+    
+    blockquote.animate-right {
+        animation: slideInRight 0.6s ease-out forwards;
+    }
+
+    @import url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css');
+
+    .featured {
+        padding: 50px 20px;
+        background-color: #f9f9f9;
+    }
+
+    .featured-container {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 30px;
+        flex-wrap: wrap;
+        max-width: 1200px;
+        margin: 0 auto;
+    }
+
+    .featured-image {
+        opacity: 0;
+        transition: all 0.8s ease-out;
+    }
+    
+    .featured-image.animate {
+        animation: slideInLeft 0.8s ease-out forwards;
+    }
+
+    .featured-image img {
+        max-width: 350px;
+        width: 100%;
+        border-radius: 10px;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    
+    .featured-image img:hover {
+        transform: scale(1.05);
+        box-shadow: 0 8px 25px rgba(0,0,0,0.2);
+    }
+
+    .featured-text {
+        flex: 1;
+        max-width: 450px;
+        margin: 0;
+        opacity: 0;
+        transition: all 0.8s ease-out;
+    }
+    
+    .featured-text.animate {
+        animation: fadeInUp 0.8s ease-out 0.2s forwards;
+    }
+
+    .featured-text h2 {
+        font-size: 2rem;
+        margin-bottom: 10px;
+    }
+
+    .featured-text p {
+        font-size: 1.1rem;
+        line-height: 1.5;
+        margin: 0;
+    }
+
+    .featured-button {
+        display: flex;
+        align-items: center;
+        opacity: 0;
+        transition: all 0.8s ease-out;
+    }
+    
+    .featured-button.animate {
+        animation: slideInRight 0.8s ease-out 0.4s forwards;
+    }
+
+    .btn-reserve {
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        background-color: #ff6600;
+        color: white;
+        padding: 12px 25px;
+        border-radius: 8px;
+        text-decoration: none;
+        font-weight: bold;
+        transition: transform 0.3s, box-shadow 0.3s;
+    }
+
+    .btn-reserve i {
+        font-size: 1.2rem;
+    }
+
+    .btn-reserve:hover {
+        transform: translateY(-3px) scale(1.05);
+        box-shadow: 0 8px 20px rgba(255,102,0,0.4);
+    }
+
+    /* Responsive */
+    @media (max-width: 900px) {
+        .featured-container {
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            gap: 15px;
+        }
+        
+        .featured-button {
+            margin-top: 10px;
+        }
+        
+        section {
+            padding: 40px 20px;
+        }
+        
+        .hero h1 {
+            font-size: 2rem;
+        }
+        
+        .hero p {
+            font-size: 1rem;
+        }
     }
 </style>
 
 <!-- 🌟 Hero Section -->
 <section class="hero">
+    <!-- Floating particles -->
+    <div class="particle"></div>
+    <div class="particle"></div>
+    <div class="particle"></div>
+    <div class="particle"></div>
+    <div class="particle"></div>
+    <div class="particle"></div>
+    
     <div class="hero-content">
-        <h1>Welcome to <span>FoodieHub</span></h1>
+        <h1>
+            <span class="word-welcome">Welcome</span>
+            <span class="word-to">to</span>
+            <span class="word-foodiehub">FoodieHub</span>
+        </h1>
         <p>Delicious food delivered fresh to your table.</p>
-        <a href="{% url 'menu' %}">
-    <button class="btn-primary">Explore Menu</button>
-</a>
-
+        <a href="{% url 'landing_menu' %}">
+            <button class="btn-primary">Explore Menu</button>
+        </a>
     </div>
 </section>
 
@@ -130,12 +502,20 @@
             <h3>Pasta Alfredo</h3>
             <p>Creamy, cheesy perfection in every bite.</p>
         </div>
+        <div class="card">
+    <img src="{% static 'images/food4.jpg' %}" alt="Dish 4">
+    <h3>Margherita Pizza</h3>
+    <p>Classic Italian pizza with fresh mozzarella and basil.</p>
+</div>
+
+<div class="card">
+    <img src="{% static 'images/food5.webp' %}" alt="Dish 5">
+    <h3>Chocolate Lava Cake</h3>
+    <p>Warm, rich chocolate cake with a molten center.</p>
+</div>
+
     </div>
 </section>
-
-
-
-
 
 <!-- 🌟 Featured Image Section -->
 <section class="featured">
@@ -155,103 +535,12 @@
         </div>
         <!-- Right: Reservation Button -->
         <div class="featured-button">
-            <a href="{% url 'reservation' %}" class="btn-reserve">
+            <a href="{% url 'landing_reservation' %}" class="btn-reserve">
                 <i class="fas fa-calendar-alt"></i> Reserve Now
             </a>
         </div>
     </div>
 </section>
-
-<style>
-@import url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css');
-
-.featured {
-    padding: 50px 20px;
-    background-color: #f9f9f9;
-}
-
-.featured-container {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 30px; /* Space between elements */
-    flex-wrap: wrap; /* Responsive for smaller screens */
-    max-width: 1200px;
-    margin: 0 auto;
-}
-
-.featured-image img {
-    max-width: 350px; /* Reduced width for tighter layout */
-    width: 100%;
-    border-radius: 10px;
-    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-}
-
-.featured-text {
-    flex: 1; /* Take remaining space */
-    max-width: 450px;
-    margin: 0;
-}
-
-.featured-text h2 {
-    font-size: 2rem;
-    margin-bottom: 10px;
-}
-
-.featured-text p {
-    font-size: 1.1rem;
-    line-height: 1.5;
-    margin: 0;
-}
-
-/* Button styling */
-.featured-button {
-    display: flex;
-    align-items: center;
-}
-
-.btn-reserve {
-    display: inline-flex;
-    align-items: center;
-    gap: 10px;
-    background-color: #ff6600;
-    color: white;
-    padding: 12px 25px;
-    border-radius: 8px;
-    text-decoration: none;
-    font-weight: bold;
-    transition: transform 0.3s, box-shadow 0.3s;
-}
-
-.btn-reserve i {
-    font-size: 1.2rem;
-}
-
-.btn-reserve:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 8px 20px rgba(255,102,0,0.4);
-}
-
-/* Responsive: stack vertically on small screens */
-@media (max-width: 900px) {
-    .featured-container {
-        flex-direction: column;
-        align-items: center;
-        text-align: center;
-        gap: 15px;
-    }
-    
-    .featured-button {
-        margin-top: 10px;
-    }
-}
-</style>
-
-
-
-
-
-
 
 <!-- 🌟 About Section -->
 <section class="about">
@@ -265,7 +554,7 @@
 <section class="testimonials">
     <h2>What Our Customers Say</h2>
     <blockquote>"Best restaurant in town! Highly recommend the grilled chicken."</blockquote>
-    <blockquote>"Amazing food and ambiance. I’ll definitely be back!"</blockquote>
+    <blockquote>"Amazing food and ambiance. I'll definitely be back!"</blockquote>
 </section>
 
 <!-- 🌟 Contact Section -->
@@ -273,4 +562,68 @@
     <h2>Contact Us</h2>
     <p>Email: support@foodiehub.com | Phone: +91 9876543210</p>
 </section>
+
+<script>
+// Scroll Animation Observer
+document.addEventListener('DOMContentLoaded', function() {
+    const observerOptions = {
+        threshold: 0.2,
+        rootMargin: '0px 0px -50px 0px'
+    };
+
+    const observer = new IntersectionObserver(function(entries) {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                // Add animate class to the element
+                entry.target.classList.add('animate');
+                
+                // Handle cards with staggered animation
+                if (entry.target.classList.contains('specials-grid')) {
+                    const cards = entry.target.querySelectorAll('.card');
+                    cards.forEach((card, index) => {
+                        setTimeout(() => {
+                            card.classList.add('animate');
+                        }, index * 200);
+                    });
+                }
+                
+                // Handle testimonials with alternating animation
+                if (entry.target.classList.contains('testimonials')) {
+                    const quotes = entry.target.querySelectorAll('blockquote');
+                    quotes.forEach((quote, index) => {
+                        setTimeout(() => {
+                            if (index % 2 === 0) {
+                                quote.classList.add('animate-left');
+                            } else {
+                                quote.classList.add('animate-right');
+                            }
+                        }, index * 200);
+                    });
+                }
+                
+                // Handle featured section elements
+                if (entry.target.classList.contains('featured-container')) {
+                    setTimeout(() => {
+                        entry.target.querySelector('.featured-image')?.classList.add('animate');
+                    }, 0);
+                    setTimeout(() => {
+                        entry.target.querySelector('.featured-text')?.classList.add('animate');
+                    }, 200);
+                    setTimeout(() => {
+                        entry.target.querySelector('.featured-button')?.classList.add('animate');
+                    }, 400);
+                }
+            }
+        });
+    }, observerOptions);
+
+    // Observe all sections and elements
+    const animatedElements = document.querySelectorAll('.specials h2, .specials-grid, .featured-container, .about, .testimonials, .contact');
+    
+    animatedElements.forEach(element => {
+        observer.observe(element);
+    });
+});
+</script>
+
 {% endblock %}

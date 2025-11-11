@@ -1,29 +1,602 @@
 {% extends 'admin/base.html' %}
-
 {% block title %}Admin Dashboard{% endblock %}
-
 {% block content %}
-<div class="main-content">
-    <h2>Welcome, {{ request.user.first_name|default:"Admin" }}!</h2>
-    <p>Here’s a quick overview of your restaurant management system:</p>
+<style>
+    /* 🌟 CRITICAL: Prevent sidebar overlap */
+    .dashboard-page {
+        padding: 20px;
+        min-height: calc(100vh - 100px);
+        width: 100%;
+        max-width: 100%;
+        margin: 0;
+        box-sizing: border-box;
+    }
 
+    /* 🌟 HEADER */
+    .dashboard-page h2 {
+        font-weight: 700;
+        font-size: 2rem;
+        text-align: center;
+        margin-bottom: 15px;
+        color: #333;
+    }
+
+    .dashboard-page > p {
+        text-align: center;
+        font-size: 1rem;
+        color: #666;
+        margin-bottom: 30px;
+    }
+
+    /* 🌟 DASHBOARD CARDS GRID */
+    .dashboard-cards {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+        gap: 20px;
+        margin-bottom: 40px;
+        width: 100%;
+    }
+
+    /* 🌟 CARD STYLES */
+    .dashboard-card {
+        background: linear-gradient(135deg, #ff6600, #ff8c1a);
+        color: white;
+        padding: 25px 20px;
+        border-radius: 15px;
+        text-align: center;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+        transition: all 0.3s ease;
+        position: relative;
+        overflow: hidden;
+    }
+
+    /* Gradient variations */
+    .dashboard-card.card-success {
+        background: linear-gradient(135deg, #28a745, #20c997);
+    }
+
+    .dashboard-card.card-info {
+        background: linear-gradient(135deg, #17a2b8, #007bff);
+    }
+
+    .dashboard-card.card-warning {
+        background: linear-gradient(135deg, #ffc107, #ff9800);
+    }
+
+    .dashboard-card.card-danger {
+        background: linear-gradient(135deg, #dc3545, #e83e8c);
+    }
+
+    /* Hover Effects */
+    .dashboard-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.25);
+    }
+
+    .dashboard-card::before {
+        content: '';
+        position: absolute;
+        top: -50%;
+        right: -50%;
+        width: 200%;
+        height: 200%;
+        background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+        opacity: 0;
+        transition: opacity 0.3s ease;
+    }
+
+    .dashboard-card:hover::before {
+        opacity: 1;
+    }
+
+    .dashboard-card h3 {
+        font-size: 1.1rem;
+        margin-bottom: 12px;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        position: relative;
+        z-index: 1;
+    }
+
+    .dashboard-card p {
+        font-size: 2.2rem;
+        font-weight: 700;
+        margin: 0;
+        position: relative;
+        z-index: 1;
+        text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    }
+
+    /* 🌟 CHARTS SECTION */
+    .charts-section {
+        margin-top: 40px;
+        width: 100%;
+    }
+
+    .section-title {
+        font-size: 1.8rem;
+        font-weight: 700;
+        color: #333;
+        text-align: center;
+        margin-bottom: 30px;
+    }
+
+    .charts-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+        gap: 25px;
+        width: 100%;
+    }
+
+    .chart-container {
+        background: #fff;
+        padding: 25px;
+        border-radius: 15px;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        transition: all 0.3s ease;
+    }
+
+    .chart-container:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+    }
+
+    .chart-header {
+        margin-bottom: 20px;
+        padding-bottom: 12px;
+        border-bottom: 3px solid #ff6600;
+    }
+
+    .chart-title {
+        font-size: 1.2rem;
+        font-weight: 600;
+        color: #333;
+        margin: 0;
+    }
+
+    .chart-subtitle {
+        font-size: 0.85rem;
+        color: #666;
+        margin-top: 5px;
+    }
+
+    .chart-canvas {
+        position: relative;
+        height: 280px;
+        width: 100%;
+    }
+
+    /* 🌟 RESPONSIVE DESIGN */
+    
+    /* Large tablets */
+    @media (max-width: 1200px) {
+        .dashboard-cards {
+            grid-template-columns: repeat(2, 1fr);
+            gap: 18px;
+        }
+
+        .charts-grid {
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 20px;
+        }
+    }
+
+    /* Tablets */
+    @media (max-width: 992px) {
+        .dashboard-page {
+            padding: 15px;
+        }
+
+        .dashboard-page h2 {
+            font-size: 1.8rem;
+        }
+
+        .dashboard-page > p {
+            font-size: 0.95rem;
+            margin-bottom: 25px;
+        }
+
+        .dashboard-cards {
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+        }
+
+        .dashboard-card {
+            padding: 20px 15px;
+        }
+
+        .dashboard-card h3 {
+            font-size: 1rem;
+        }
+
+        .dashboard-card p {
+            font-size: 1.9rem;
+        }
+
+        .charts-grid {
+            grid-template-columns: 1fr;
+            gap: 20px;
+        }
+
+        .chart-container {
+            padding: 20px;
+        }
+
+        .section-title {
+            font-size: 1.6rem;
+        }
+
+        .chart-canvas {
+            height: 250px;
+        }
+    }
+
+    /* Mobile */
+    @media (max-width: 768px) {
+        .dashboard-page {
+            padding: 12px;
+        }
+
+        .dashboard-page h2 {
+            font-size: 1.6rem;
+            margin-bottom: 10px;
+        }
+
+        .dashboard-page > p {
+            font-size: 0.9rem;
+            margin-bottom: 20px;
+        }
+
+        .dashboard-cards {
+            grid-template-columns: 1fr;
+            gap: 12px;
+        }
+
+        .dashboard-card {
+            padding: 18px 15px;
+        }
+
+        .dashboard-card h3 {
+            font-size: 0.95rem;
+        }
+
+        .dashboard-card p {
+            font-size: 1.8rem;
+        }
+
+        .section-title {
+            font-size: 1.4rem;
+            margin-bottom: 20px;
+        }
+
+        .charts-grid {
+            gap: 15px;
+        }
+
+        .chart-container {
+            padding: 15px;
+        }
+
+        .chart-title {
+            font-size: 1.1rem;
+        }
+
+        .chart-subtitle {
+            font-size: 0.8rem;
+        }
+
+        .chart-canvas {
+            height: 220px;
+        }
+    }
+
+    /* Small mobile */
+    @media (max-width: 576px) {
+        .dashboard-page {
+            padding: 10px;
+        }
+
+        .dashboard-page h2 {
+            font-size: 1.4rem;
+        }
+
+        .dashboard-page > p {
+            font-size: 0.85rem;
+        }
+
+        .dashboard-card h3 {
+            font-size: 0.9rem;
+            margin-bottom: 10px;
+        }
+
+        .dashboard-card p {
+            font-size: 1.6rem;
+        }
+
+        .section-title {
+            font-size: 1.3rem;
+        }
+
+        .chart-container {
+            padding: 12px;
+        }
+
+        .chart-title {
+            font-size: 1rem;
+        }
+
+        .chart-canvas {
+            height: 200px;
+        }
+    }
+
+    /* Extra small mobile */
+    @media (max-width: 400px) {
+        .dashboard-page h2 {
+            font-size: 1.2rem;
+        }
+
+        .dashboard-card p {
+            font-size: 1.5rem;
+        }
+
+        .chart-canvas {
+            height: 180px;
+        }
+    }
+</style>
+
+<div class="dashboard-page">
+    <h2>Welcome, {{ request.user.first_name|default:"Admin" }}!</h2>
+    <p>Here's a quick overview of your restaurant management system</p>
+
+    <!-- Statistics Cards -->
     <div class="dashboard-cards">
-        <div class="card">
+        <div class="dashboard-card card-success">
             <h3>Orders Today</h3>
-            <p>12 New Orders</p>
+            <p>{{ orders_today }}</p>
         </div>
-        <div class="card">
+        <div class="dashboard-card card-info">
             <h3>Upcoming Reservations</h3>
-            <p>8 Reservations</p>
+            <p>{{ upcoming_reservations }}</p>
         </div>
-        <div class="card">
+        <div class="dashboard-card card-warning">
             <h3>Menu Items</h3>
-            <p>24 Items</p>
+            <p>{{ total_menu_items }}</p>
         </div>
-        <div class="card">
+        <div class="dashboard-card card-danger">
             <h3>Total Revenue</h3>
-            <p>₹15,200</p>
+            <p>₹{{ total_revenue }}</p>
+        </div>
+    </div>
+
+    <!-- Charts Section -->
+    <div class="charts-section">
+        <h3 class="section-title">Analytics Overview</h3>
+        
+        <div class="charts-grid">
+            <!-- Income Chart -->
+            <div class="chart-container">
+                <div class="chart-header">
+                    <h4 class="chart-title">📈 Revenue Trends</h4>
+                    <p class="chart-subtitle">Monthly income analysis</p>
+                </div>
+                <div class="chart-canvas">
+                    <canvas id="incomeChart"></canvas>
+                </div>
+            </div>
+
+            <!-- Orders Chart -->
+            <div class="chart-container">
+                <div class="chart-header">
+                    <h4 class="chart-title">🛒 Order Statistics</h4>
+                    <p class="chart-subtitle">Weekly order distribution</p>
+                </div>
+                <div class="chart-canvas">
+                    <canvas id="ordersChart"></canvas>
+                </div>
+            </div>
+
+            <!-- Reservations Chart -->
+            <div class="chart-container">
+                <div class="chart-header">
+                    <h4 class="chart-title">📅 Reservation Trends</h4>
+                    <p class="chart-subtitle">Daily reservation bookings</p>
+                </div>
+                <div class="chart-canvas">
+                    <canvas id="reservationsChart"></canvas>
+                </div>
+            </div>
+
+            <!-- Ratings Chart -->
+            <div class="chart-container">
+                <div class="chart-header">
+                    <h4 class="chart-title">⭐ Customer Ratings</h4>
+                    <p class="chart-subtitle">Rating distribution</p>
+                </div>
+                <div class="chart-canvas">
+                    <canvas id="ratingsChart"></canvas>
+                </div>
+            </div>
         </div>
     </div>
 </div>
+
+<!-- Chart.js Library -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
+
+<script>
+    Chart.defaults.font.family = "'Segoe UI', Tahoma, Geneva, Verdana, sans-serif";
+    Chart.defaults.color = '#666';
+
+    // 1. Income Chart
+    const incomeCtx = document.getElementById('incomeChart').getContext('2d');
+    new Chart(incomeCtx, {
+        type: 'line',
+        data: {
+            labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+            datasets: [{
+                label: 'Revenue (₹)',
+                data: {{ income_data|default:"[12000, 19000, 15000, 25000, 22000, 30000, 28000, 35000, 32000, 40000, 38000, 45000]" }},
+                borderColor: '#28a745',
+                backgroundColor: 'rgba(40, 167, 69, 0.1)',
+                tension: 0.4,
+                fill: true,
+                borderWidth: 3,
+                pointRadius: 5,
+                pointHoverRadius: 7,
+                pointBackgroundColor: '#28a745',
+                pointBorderColor: '#fff',
+                pointBorderWidth: 2
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    display: true,
+                    position: 'top',
+                    labels: { font: { size: 11, weight: 'bold' }, padding: 12 }
+                },
+                tooltip: {
+                    backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                    padding: 10,
+                    cornerRadius: 8
+                }
+            },
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    ticks: { callback: function(value) { return '₹' + value.toLocaleString(); } },
+                    grid: { color: 'rgba(0, 0, 0, 0.05)' }
+                },
+                x: { grid: { display: false } }
+            }
+        }
+    });
+
+    // 2. Orders Chart
+    const ordersCtx = document.getElementById('ordersChart').getContext('2d');
+    new Chart(ordersCtx, {
+        type: 'bar',
+        data: {
+            labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+            datasets: [{
+                label: 'Orders',
+                data: {{ orders_data|default:"[45, 52, 38, 65, 72, 95, 88]" }},
+                backgroundColor: [
+                    'rgba(23, 162, 184, 0.8)',
+                    'rgba(23, 162, 184, 0.8)',
+                    'rgba(23, 162, 184, 0.8)',
+                    'rgba(23, 162, 184, 0.8)',
+                    'rgba(23, 162, 184, 0.8)',
+                    'rgba(255, 102, 0, 0.8)',
+                    'rgba(255, 102, 0, 0.8)'
+                ],
+                borderColor: ['#17a2b8', '#17a2b8', '#17a2b8', '#17a2b8', '#17a2b8', '#ff6600', '#ff6600'],
+                borderWidth: 2,
+                borderRadius: 10,
+                borderSkipped: false
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: { display: true, position: 'top', labels: { font: { size: 11, weight: 'bold' }, padding: 12 } },
+                tooltip: { backgroundColor: 'rgba(0, 0, 0, 0.8)', padding: 10, cornerRadius: 8 }
+            },
+            scales: {
+                y: { beginAtZero: true, ticks: { stepSize: 20 }, grid: { color: 'rgba(0, 0, 0, 0.05)' } },
+                x: { grid: { display: false } }
+            }
+        }
+    });
+
+    // 3. Reservations Chart
+    const reservationsCtx = document.getElementById('reservationsChart').getContext('2d');
+    new Chart(reservationsCtx, {
+        type: 'line',
+        data: {
+            labels: ['Week 1', 'Week 2', 'Week 3', 'Week 4'],
+            datasets: [{
+                label: 'Reservations',
+                data: {{ reservations_data|default:"[25, 35, 42, 38]" }},
+                borderColor: '#ffc107',
+                backgroundColor: 'rgba(255, 193, 7, 0.2)',
+                tension: 0.4,
+                fill: true,
+                borderWidth: 3,
+                pointRadius: 6,
+                pointHoverRadius: 8,
+                pointBackgroundColor: '#ffc107',
+                pointBorderColor: '#fff',
+                pointBorderWidth: 2
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: { display: true, position: 'top', labels: { font: { size: 11, weight: 'bold' }, padding: 12 } },
+                tooltip: { backgroundColor: 'rgba(0, 0, 0, 0.8)', padding: 10, cornerRadius: 8 }
+            },
+            scales: {
+                y: { beginAtZero: true, ticks: { stepSize: 10 }, grid: { color: 'rgba(0, 0, 0, 0.05)' } },
+                x: { grid: { display: false } }
+            }
+        }
+    });
+
+    // 4. Ratings Chart
+    const ratingsCtx = document.getElementById('ratingsChart').getContext('2d');
+    new Chart(ratingsCtx, {
+        type: 'doughnut',
+        data: {
+            labels: ['5 Stars', '4 Stars', '3 Stars', '2 Stars', '1 Star'],
+            datasets: [{
+                label: 'Ratings',
+                data: {{ ratings_data|default:"[150, 80, 30, 10, 5]" }},
+                backgroundColor: [
+                    'rgba(40, 167, 69, 0.8)',
+                    'rgba(23, 162, 184, 0.8)',
+                    'rgba(255, 193, 7, 0.8)',
+                    'rgba(255, 140, 26, 0.8)',
+                    'rgba(220, 53, 69, 0.8)'
+                ],
+                borderColor: ['#28a745', '#17a2b8', '#ffc107', '#ff8c1a', '#dc3545'],
+                borderWidth: 2,
+                hoverOffset: 15
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    display: true,
+                    position: 'right',
+                    labels: { font: { size: 11, weight: 'bold' }, padding: 12, usePointStyle: true, pointStyle: 'circle' }
+                },
+                tooltip: {
+                    backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                    padding: 10,
+                    cornerRadius: 8,
+                    callbacks: {
+                        label: function(context) {
+                            let label = context.label || '';
+                            let value = context.parsed || 0;
+                            let total = context.dataset.data.reduce((a, b) => a + b, 0);
+                            let percentage = ((value / total) * 100).toFixed(1);
+                            return label + ': ' + value + ' (' + percentage + '%)';
+                        }
+                    }
+                }
+            }
+        }
+    });
+</script>
+
 {% endblock %}

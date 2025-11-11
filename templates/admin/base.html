@@ -3,138 +3,67 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Dashboard</title>
+    <title>{% block title %}Admin Dashboard | FoodieHub{% endblock %}</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: 'Poppins', sans-serif; background: #f4f4f4; }
 
-        /* Navbar */
-        .navbar {
-            position: fixed;
-            top: 0;
-            width: 100%;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 15px 50px;
-            background: #ff6600;
-            color: #fff;
-            z-index: 100;
-        }
-        .navbar h1 { font-size: 24px; }
-        .nav-links { list-style: none; display: flex; gap: 20px; }
-        .nav-links a { color: white; font-weight: 600; transition: 0.3s; }
-        .nav-links a:hover { opacity: 0.8; }
 
-        /* Sidebar */
-        .sidebar {
-            position: fixed;
-            top: 60px;
-            left: 0;
-            width: 250px;
-            height: calc(100vh - 60px);
-            background: linear-gradient(180deg, #2c3e50 0%, #1a252f 100%);
-            overflow-y: auto;
-            box-shadow: 2px 0 10px rgba(0,0,0,0.1);
-        }
-        .sidebar a {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            padding: 16px 25px;
-            color: #ecf0f1;
-            font-size: 15px;
-            transition: all 0.3s;
-            border-left: 3px solid transparent;
-        }
-        .sidebar a:hover, .sidebar a.active {
-            background: rgba(255, 102, 0, 0.15);
-            border-left-color: #ff6600;
-            padding-left: 30px;
-        }
-        .sidebar-section { 
-            padding: 20px 25px 8px; 
-            color: #95a5a6; 
-            font-size: 12px; 
-            text-transform: uppercase; 
-            letter-spacing: 1px;
-        }
+               * { margin: 0; padding: 0; box-sizing: border-box; } body { font-family: 'Poppins', sans-serif; background: #f4f4f4; color: #333; overflow-x: hidden; } /* Navbar */ .navbar { position: fixed; top: 0; width: 100%; display: flex; justify-content: space-between; align-items: center; padding: 15px 40px; background: #ff6600; color: #fff; z-index: 1000; } .navbar h1 { font-size: 22px; font-weight: 600; } .nav-links { list-style: none; display: flex; gap: 20px; align-items: center; } .nav-links a { color: white; font-weight: 600; text-decoration: none; transition: 0.3s; } .nav-links a:hover { opacity: 0.8; } /* Sidebar */ .sidebar { position: fixed; top: 60px; left: 0; width: 250px; height: calc(100vh - 60px); background: linear-gradient(180deg, #2c3e50 0%, #1a252f 100%); overflow-y: auto; transition: all 0.3s ease-in-out; } .sidebar a { display: flex; align-items: center; gap: 15px; padding: 14px 25px; color: #ecf0f1; font-size: 15px; text-decoration: none; border-left: 3px solid transparent; transition: all 0.3s; } .sidebar a:hover, .sidebar a.active { background: rgba(255, 102, 0, 0.2); border-left-color: #ff6600; padding-left: 35px; } .sidebar-section { padding: 20px 25px 10px; color: #95a5a6; font-size: 12px; text-transform: uppercase; letter-spacing: 1px; } /* Main Content */ .main-content { margin-left: 250px; margin-top: 60px; padding: 30px; min-height: calc(100vh - 60px); transition: margin-left 0.3s ease-in-out; } .main-content h2 { color: #222; font-size: 24px; margin-bottom: 10px; } .dashboard-cards { display: flex; gap: 20px; flex-wrap: wrap; margin-top: 25px; } .card { flex: 1 1 250px; background: #fff; border-radius: 12px; padding: 25px; box-shadow: 0 4px 12px rgba(0,0,0,0.08); transition: transform 0.2s ease; } .card:hover { transform: translateY(-5px); } .card h3 { color: #ff6600; margin-bottom: 10px; font-size: 18px; } .card p { font-size: 26px; font-weight: 700; color: #333; } /* Sidebar Toggle Button */ .menu-toggle { display: none; flex-direction: column; gap: 4px; cursor: pointer; } .menu-toggle span { width: 25px; height: 3px; background: #fff; border-radius: 2px; } /* Responsive Design */ @media (max-width: 992px) { .navbar { padding: 15px 25px; } .main-content { margin-left: 220px; padding: 20px; } } @media (max-width: 768px) { .menu-toggle { display: flex; } .sidebar { position: fixed; left: -250px; top: 60px; height: calc(100vh - 60px); transition: left 0.3s ease; } .sidebar.active { left: 0; } .main-content { margin-left: 0; padding: 20px; } .dashboard-cards { flex-direction: column; } } @media (max-width: 480px) { .navbar h1 { font-size: 18px; } .nav-links { display: none; } .card p { font-size: 22px; } }
 
-        /* Main Content */
-        .main-content {
-            margin-left: 250px;
-            margin-top: 60px;
-            padding: 30px;
-            min-height: calc(100vh - 60px);
-        }
-        .dashboard-cards { display: flex; gap: 20px; flex-wrap: wrap; margin-top: 20px; }
-        .card {
-            flex: 1 1 200px;
-            background: #fff;
-            border-radius: 10px;
-            padding: 25px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
-        }
-        .card h3 { color: #ff6600; margin-bottom: 10px; }
-        .card p { font-size: 24px; font-weight: 600; color: #333; }
     </style>
 </head>
 <body>
+
+    <!-- Navbar -->
     <div class="navbar">
+        <div class="menu-toggle" id="menu-toggle">
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
         <h1>🍽️ FoodieHub Admin</h1>
         <ul class="nav-links">
             <li><a href="#">Profile</a></li>
-            <li><a href="{% url 'admin-logout' %}">Logout</a></li>
+            <li><a href="{% url 'logout' %}">Logout</a></li>
         </ul>
     </div>
 
-    <div class="sidebar">
+    <!-- Sidebar -->
+    {% block sidebar %}
+    <div class="sidebar" id="sidebar">
         <div class="sidebar-section">Main</div>
-        <a href="#" class="active">📊 Dashboard</a>
-        <a href="#">📦 Orders</a>
-        <a href="#">📅 Reservations</a>
-        
+        <a href="{% url 'admin_dashboard' %}" class="{% if request.resolver_match.url_name == 'admin_dashboard' %}active{% endif %}">📊 Dashboard</a>
+
         <div class="sidebar-section">Menu</div>
-        <a href="#">🍔 Menu Items</a>
-        <a href="#">➕ Add Item</a>
-        <a href="#">🏷️ Categories</a>
-        
-        <div class="sidebar-section">Users</div>
-        <a href="#">👥 Customers</a>
-        <a href="#">👨‍💼 Staff</a>
-        
-        <div class="sidebar-section">Reports</div>
-        <a href="#">📈 Sales</a>
-        <a href="#">💰 Revenue</a>
-        <a href="#">📊 Analytics</a>
-        
-        <div class="sidebar-section">Settings</div>
-        <a href="#">⚙️ General</a>
-        <a href="#">🔔 Notifications</a>
+        <a href="{% url 'menu_list' %}" class="{% if request.resolver_match.url_name == 'menu_list' %}active{% endif %}">🍔 Menu Items</a>
+        <!-- <a href="{% url 'add_menu_item' %}" class="{% if request.resolver_match.url_name == 'add_menu_item' %}active{% endif %}">➕ Add Item</a> -->
+
+        <div class="sidebar-section">Orders</div>
+ <a href="{% url 'admin_orders' %}" class="{% if request.resolver_match.url_name == 'admin_orders' %}active{% endif %}">🧾 View Orders</a>
+        <div class="sidebar-section">Reservations</div>
+        <a href="{% url 'view_reservations' %}" class="{% if request.resolver_match.url_name == 'view_reservations' %}active{% endif %}">📅 Manage Reservations</a>
+
+        <div class="sidebar-section">Account</div>
+        <a href="{% url 'logout' %}">🚪 Logout</a>
+    </div>
+    {% endblock %}
+
+    <!-- Main Content -->
+    <div class="main-content" id="main-content">
+        {% block content %}
+      
+        {% endblock %}
     </div>
 
-    <div class="main-content">
-        <h2>Welcome, Admin!</h2>
-        <p>Here is a quick overview of your restaurant management system:</p>
-        <div class="dashboard-cards">
-            <div class="card">
-                <h3>Orders Today</h3>
-                <p>12</p>
-            </div>
-            <div class="card">
-                <h3>Reservations</h3>
-                <p>8</p>
-            </div>
-            <div class="card">
-                <h3>Menu Items</h3>
-                <p>24</p>
-            </div>
-            <div class="card">
-                <h3>Revenue</h3>
-                <p>₹15,420</p>
-            </div>
-        </div>
-    </div>
+    <script>
+        const menuToggle = document.getElementById('menu-toggle');
+        const sidebar = document.getElementById('sidebar');
+
+        menuToggle.addEventListener('click', () => {
+            sidebar.classList.toggle('active');
+        });
+    </script>
+
 </body>
 </html>

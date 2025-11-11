@@ -5,7 +5,12 @@
 {% block content %}
 <style>
     body {
-        background: #f4f6f8;
+        background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+        min-height: 100vh;
+        overflow-x: hidden;
+        position: relative;
+        margin: 0;
+        padding: 0;
     }
 
     .login-container {
@@ -13,134 +18,560 @@
         display: flex;
         align-items: center;
         justify-content: center;
-        padding: 20px;
+        padding: 40px 20px;
+        position: relative;
     }
 
-    .login-box {
-        background: white;
-        border-radius: 16px;
-        padding: 45px 40px;
-        box-shadow: 0 6px 25px rgba(0, 0, 0, 0.1);
+    .content-wrapper {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 60px;
+        max-width: 1400px;
         width: 100%;
-        max-width: 400px;
-        animation: fadeIn 0.5s ease;
+        position: relative;
     }
 
-    @keyframes fadeIn {
-        from { opacity: 0; transform: translateY(20px); }
-        to { opacity: 1; transform: translateY(0); }
+    /* Modern Table Lamp */
+    .lamp-container {
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        min-width: 200px;
+    }
+
+    .lamp-arm {
+        width: 8px;
+        height: 180px;
+        background: linear-gradient(180deg, #475569 0%, #334155 100%);
+        border-radius: 4px;
+        position: relative;
+        box-shadow: -2px 0 10px rgba(0, 0, 0, 0.3);
+    }
+
+    .lamp-head {
+        width: 140px;
+        height: 100px;
+        background: linear-gradient(135deg, #64748b 0%, #475569 100%);
+        border-radius: 0 0 60% 60%;
+        position: relative;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+        overflow: hidden;
+    }
+
+    .lamp-bulb {
+        width: 50px;
+        height: 70px;
+        background: radial-gradient(circle at 50% 30%, #fff, #ffd700);
+        border-radius: 50%;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        box-shadow: 0 0 40px rgba(255, 215, 0, 0.9),
+                    0 0 80px rgba(255, 215, 0, 0.5),
+                    inset 0 -10px 20px rgba(255, 200, 0, 0.3);
+        transition: all 0.5s ease;
+    }
+
+    .lamp-bulb::before {
+        content: '';
+        position: absolute;
+        width: 20px;
+        height: 20px;
+        background: rgba(255, 255, 255, 0.8);
+        border-radius: 50%;
+        top: 15px;
+        left: 15px;
+        filter: blur(5px);
+    }
+
+    .lamp-bulb.off {
+        background: linear-gradient(135deg, #94a3b8 0%, #64748b 100%);
+        box-shadow: none;
+    }
+
+    .lamp-bulb.off::before {
+        display: none;
+    }
+
+    .lamp-base {
+        width: 100px;
+        height: 20px;
+        background: linear-gradient(135deg, #334155 0%, #1e293b 100%);
+        border-radius: 50%;
+        margin-top: 10px;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+    }
+
+    /* Pull Cord */
+    .cord-container {
+        position: absolute;
+        top: 100px;
+        display: flex;
+        gap: 60px;
+        align-items: flex-start;
+        z-index: 10;
+    }
+
+    .cord-wrapper {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        position: relative;
+    }
+
+    .cord {
+        width: 2px;
+        height: 80px;
+        background: #94a3b8;
+        position: relative;
+        animation: cableWave 3s ease-in-out infinite;
+        transform-origin: top center;
+    }
+
+    @keyframes cableWave {
+        0%, 100% {
+            transform: rotate(0deg);
+        }
+        25% {
+            transform: rotate(3deg);
+        }
+        75% {
+            transform: rotate(-3deg);
+        }
+    }
+
+    .cord-wrapper:nth-child(2) .cord {
+        animation-delay: 0.5s;
+    }
+
+    .cord::before {
+        content: '';
+        position: absolute;
+        width: 100%;
+        height: 20px;
+        background: inherit;
+        top: -10px;
+    }
+
+    .pull-switch {
+        width: 45px;
+        height: 45px;
+        background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+        border-radius: 50%;
+        cursor: grab;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 22px;
+        box-shadow: 0 4px 20px rgba(16, 185, 129, 0.4);
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        border: 3px solid rgba(255, 255, 255, 0.2);
+        user-select: none;
+    }
+
+    .pull-switch:hover {
+        transform: translateY(-3px) scale(1.05);
+        box-shadow: 0 6px 25px rgba(16, 185, 129, 0.6);
+    }
+
+    .pull-switch:active {
+        cursor: grabbing;
+    }
+
+    .pull-switch.pulling {
+        transform: translateY(20px) scale(0.95);
+    }
+
+    .pull-switch.hide-mode {
+        background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+        box-shadow: 0 4px 20px rgba(239, 68, 68, 0.4);
+    }
+
+    .pull-switch.hide-mode:hover {
+        box-shadow: 0 6px 25px rgba(239, 68, 68, 0.6);
+    }
+
+    .cord-label {
+        position: absolute;
+        bottom: -35px;
+        font-size: 11px;
+        color: rgba(255, 255, 255, 0.7);
+        white-space: nowrap;
+        background: rgba(15, 23, 42, 0.6);
+        padding: 4px 10px;
+        border-radius: 12px;
+        backdrop-filter: blur(10px);
+        font-weight: 500;
+    }
+
+    /* Light Glow Effect */
+    .light-glow {
+        position: absolute;
+        top: -50px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 300px;
+        height: 300px;
+        background: radial-gradient(circle, rgba(255, 215, 0, 0.3) 0%, transparent 70%);
+        pointer-events: none;
+        transition: opacity 0.5s ease;
+        filter: blur(30px);
+    }
+
+    .light-glow.off {
+        opacity: 0;
+    }
+
+    /* Login Box */
+    .login-box {
+        background: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(20px);
+        border-radius: 24px;
+        padding: 50px 45px;
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        width: 100%;
+        max-width: 440px;
+        transform: translateY(-150vh);
+        opacity: 0;
+        transition: all 0.8s cubic-bezier(0.34, 1.56, 0.64, 1);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+
+    .login-box.show {
+        transform: translateY(0);
+        opacity: 1;
     }
 
     .login-box h2 {
         text-align: center;
-        color: #333;
-        margin-bottom: 25px;
-        font-size: 1.8rem;
+        color: #1e293b;
+        margin-bottom: 30px;
+        font-size: 2rem;
         font-weight: 700;
+        background: linear-gradient(135deg, #ff6600, #ff8c42);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
     }
 
     .message-box {
-        background: #ffeaea;
-        border-left: 4px solid #e63946;
-        padding: 12px 15px;
-        border-radius: 8px;
-        margin-bottom: 15px;
-        color: #c53030;
+        background: linear-gradient(135deg, #fee2e2 0%, #fecaca 100%);
+        border-left: 4px solid #ef4444;
+        padding: 14px 18px;
+        border-radius: 12px;
+        margin-bottom: 20px;
+        color: #991b1b;
         font-size: 14px;
+        font-weight: 500;
     }
 
     form {
         display: flex;
         flex-direction: column;
-        gap: 18px;
+        gap: 22px;
     }
 
     .input-group {
         display: flex;
         flex-direction: column;
-        gap: 6px;
+        gap: 8px;
+    }
+
+    .input-group label {
+        color: #475569;
+        font-weight: 600;
+        font-size: 14px;
+        letter-spacing: 0.3px;
     }
 
     .login-box input[type="text"],
     .login-box input[type="password"] {
         width: 100%;
-        padding: 14px 16px;
-        border: 1.8px solid #d0d7de;
-        border-radius: 8px;
+        padding: 16px 18px;
+        border: 2px solid #e2e8f0;
+        border-radius: 12px;
         font-size: 15px;
-        background: #fafafa;
-        transition: 0.3s ease;
+        background: #f8fafc;
+        transition: all 0.3s ease;
+        font-family: inherit;
     }
 
     .login-box input:focus {
         outline: none;
         border-color: #ff6600;
         background: white;
-        box-shadow: 0 0 0 3px rgba(255, 102, 0, 0.1);
+        box-shadow: 0 0 0 4px rgba(255, 102, 0, 0.1);
+        transform: translateY(-1px);
     }
 
     .login-box button {
-        padding: 14px;
-        background: linear-gradient(135deg, #ff6600, #ff8c42);
+        padding: 16px;
+        background: linear-gradient(135deg, #ff6600 0%, #ff8c42 100%);
         color: white;
         border: none;
-        border-radius: 8px;
+        border-radius: 12px;
         font-size: 16px;
-        font-weight: 600;
+        font-weight: 700;
         cursor: pointer;
         transition: all 0.3s ease;
         margin-top: 10px;
+        letter-spacing: 0.5px;
+        box-shadow: 0 4px 15px rgba(255, 102, 0, 0.3);
     }
 
     .login-box button:hover {
         transform: translateY(-2px);
-        box-shadow: 0 8px 18px rgba(255, 102, 0, 0.3);
+        box-shadow: 0 8px 25px rgba(255, 102, 0, 0.4);
+    }
+
+    .login-box button:active {
+        transform: translateY(0);
     }
 
     .login-footer {
         text-align: center;
-        margin-top: 25px;
-        color: #888;
+        margin-top: 30px;
+        color: #64748b;
         font-size: 14px;
+        font-weight: 500;
+    }
+
+    .instruction-text {
+        position: absolute;
+        bottom: -90px;
+        left: 50%;
+        transform: translateX(-50%);
+        color: rgba(255, 255, 255, 0.8);
+        text-align: center;
+        font-size: 13px;
+        font-weight: 500;
+        white-space: nowrap;
+        opacity: 1;
+        transition: opacity 0.3s ease;
+        background: rgba(15, 23, 42, 0.6);
+        padding: 8px 16px;
+        border-radius: 20px;
+        backdrop-filter: blur(10px);
+    }
+
+    .instruction-text.hide {
+        opacity: 0;
+    }
+
+    /* Responsive Design */
+    @media (max-width: 968px) {
+        .content-wrapper {
+            gap: 40px;
+        }
+
+        .cord-container {
+            gap: 40px;
+        }
     }
 
     @media (max-width: 480px) {
         .login-box {
-            padding: 35px 25px;
+            padding: 40px 30px;
+            max-width: 100%;
         }
 
         .login-box h2 {
-            font-size: 1.5rem;
+            font-size: 1.6rem;
+        }
+
+        .lamp-head {
+            width: 120px;
+            height: 90px;
+        }
+
+        .lamp-arm {
+            height: 150px;
+        }
+
+        .content-wrapper {
+            gap: 30px;
         }
     }
 </style>
 
 <div class="login-container">
-    <div class="login-box">
-        <h2>🔐 Admin Login</h2>
-
-        {% if messages %}
-            {% for message in messages %}
-                <div class="message-box">{{ message }}</div>
-            {% endfor %}
-        {% endif %}
-
-        <form method="POST" action="">
-            {% csrf_token %}
-            <div class="input-group">
-                <label for="username">Username</label>
-                <input id="username" type="text" name="username" placeholder="Enter username" required>
+    <div class="content-wrapper">
+        <!-- Modern Table Lamp -->
+        <div class="lamp-container">
+            <div class="light-glow" id="lightGlow"></div>
+            <div class="lamp-head">
+                <div class="lamp-bulb" id="bulb"></div>
             </div>
-            <div class="input-group">
-                <label for="password">Password</label>
-                <input id="password" type="password" name="password" placeholder="Enter password" required>
+            <div class="lamp-arm"></div>
+            <div class="lamp-base"></div>
+            
+            <div class="cord-container">
+                <div class="cord-wrapper">
+                    <div class="cord"></div>
+                    <div class="pull-switch" id="showSwitch">💡</div>
+                    <div class="cord-label">Show Login</div>
+                </div>
+                
+                <div class="cord-wrapper">
+                    <div class="cord"></div>
+                    <div class="pull-switch hide-mode" id="hideSwitch" style="opacity: 0; pointer-events: none;">🔒</div>
+                    <div class="cord-label" style="opacity: 0;">Hide Login</div>
+                </div>
             </div>
-            <button type="submit">Login</button>
-        </form>
 
-        <div class="login-footer">
-            <p>🍽️ FoodieHub Admin Portal</p>
+            <div class="instruction-text" id="instruction">
+                👆 Pull left cord to show login
+            </div>
+        </div>
+
+        <!-- Login Form -->
+        <div class="login-box" id="loginBox">
+            <h2>🔐 Admin Login</h2>
+
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="message-box">{{ message }}</div>
+                {% endfor %}
+            {% endif %}
+
+            <form method="POST" action="">
+                {% csrf_token %}
+                <div class="input-group">
+                    <label for="username">Username</label>
+                    <input id="username" type="text" name="username" placeholder="Enter your username" required>
+                </div>
+                <div class="input-group">
+                    <label for="password">Password</label>
+                    <input id="password" type="password" name="password" placeholder="Enter your password" required>
+                </div>
+                <button type="submit">Login</button>
+            </form>
+
+            <div class="login-footer">
+                <p>🍽️ FoodieHub Admin Portal</p>
+            </div>
         </div>
     </div>
 </div>
+
+<script>
+    const loginBox = document.getElementById('loginBox');
+    const showSwitch = document.getElementById('showSwitch');
+    const hideSwitch = document.getElementById('hideSwitch');
+    const bulb = document.getElementById('bulb');
+    const lightGlow = document.getElementById('lightGlow');
+    const instruction = document.getElementById('instruction');
+    const cordLabels = document.querySelectorAll('.cord-label');
+    
+    let isFormVisible = false;
+    let isDragging = false;
+    let startY = 0;
+    let pullDistance = 0;
+    let activeSwitch = null;
+
+    function handlePullStart(e, switchElement) {
+        e.preventDefault();
+        isDragging = true;
+        activeSwitch = switchElement;
+        startY = e.type.includes('mouse') ? e.clientY : e.touches[0].clientY;
+        pullDistance = 0;
+        switchElement.classList.add('pulling');
+    }
+
+    function handlePullMove(e) {
+        if (!isDragging || !activeSwitch) return;
+        
+        const currentY = e.type.includes('mouse') ? e.clientY : e.touches[0].clientY;
+        pullDistance = currentY - startY;
+        
+        if (pullDistance > 0) {
+            const distance = Math.min(pullDistance, 40);
+            activeSwitch.style.transform = `translateY(${distance}px) scale(${1 - distance * 0.003})`;
+        }
+    }
+
+    function handlePullEnd() {
+        if (!isDragging || !activeSwitch) return;
+        
+        activeSwitch.classList.remove('pulling');
+        activeSwitch.style.transform = '';
+        
+        if (pullDistance > 25) {
+            if (activeSwitch === showSwitch) {
+                showLoginForm();
+            } else if (activeSwitch === hideSwitch) {
+                hideLoginForm();
+            }
+        }
+        
+        isDragging = false;
+        activeSwitch = null;
+        pullDistance = 0;
+    }
+
+    function showLoginForm() {
+        isFormVisible = true;
+        loginBox.classList.add('show');
+        bulb.classList.add('off');
+        lightGlow.classList.add('off');
+        
+        // Hide show switch, reveal hide switch
+        showSwitch.style.opacity = '0';
+        showSwitch.style.pointerEvents = 'none';
+        cordLabels[0].style.opacity = '0';
+        
+        setTimeout(() => {
+            hideSwitch.style.opacity = '1';
+            hideSwitch.style.pointerEvents = 'auto';
+            cordLabels[1].style.opacity = '1';
+            cordLabels[1].textContent = 'Hide Login';
+        }, 400);
+        
+        instruction.textContent = '👆 Pull right cord to hide login';
+    }
+
+    function hideLoginForm() {
+        isFormVisible = false;
+        loginBox.classList.remove('show');
+        bulb.classList.remove('off');
+        lightGlow.classList.remove('off');
+        
+        // Hide hide switch, reveal show switch
+        hideSwitch.style.opacity = '0';
+        hideSwitch.style.pointerEvents = 'none';
+        cordLabels[1].style.opacity = '0';
+        
+        setTimeout(() => {
+            showSwitch.style.opacity = '1';
+            showSwitch.style.pointerEvents = 'auto';
+            cordLabels[0].style.opacity = '1';
+        }, 400);
+        
+        instruction.textContent = '👆 Pull left cord to show login';
+    }
+
+    // Event Listeners for Show Switch
+    showSwitch.addEventListener('mousedown', (e) => handlePullStart(e, showSwitch));
+    showSwitch.addEventListener('touchstart', (e) => handlePullStart(e, showSwitch), { passive: false });
+    
+    // Event Listeners for Hide Switch
+    hideSwitch.addEventListener('mousedown', (e) => handlePullStart(e, hideSwitch));
+    hideSwitch.addEventListener('touchstart', (e) => handlePullStart(e, hideSwitch), { passive: false });
+    
+    // Global move and end events
+    document.addEventListener('mousemove', handlePullMove);
+    document.addEventListener('touchmove', handlePullMove, { passive: false });
+    
+    document.addEventListener('mouseup', handlePullEnd);
+    document.addEventListener('touchend', handlePullEnd);
+
+    // Prevent text selection while dragging
+    [showSwitch, hideSwitch].forEach(sw => {
+        sw.addEventListener('selectstart', (e) => e.preventDefault());
+    });
+</script>
 {% endblock %}

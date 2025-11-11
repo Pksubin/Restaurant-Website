@@ -13,15 +13,149 @@
         justify-content: center;
         color: white;
         text-align: center;
+        position: relative;
+        overflow: hidden;
     }
+    
+    .hero-content {
+        position: relative;
+        z-index: 2;
+    }
+    
     .contact-hero h1 {
         font-size: 3rem;
         margin: 0;
         text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 15px;
+        flex-wrap: wrap;
     }
+    
+    /* Animated title words */
+    .word-get {
+        opacity: 0;
+        animation: slideFromLeft 1s ease-out 0.3s forwards;
+    }
+    
+    .word-in {
+        opacity: 0;
+        animation: slideFromTop 1s ease-out 0.5s forwards;
+    }
+    
+    .word-touch {
+        opacity: 0;
+        animation: slideFromRight 1s ease-out 0.7s forwards;
+    }
+    
+    @keyframes slideFromLeft {
+        0% {
+            transform: translateX(-100px) translateY(-50px);
+            opacity: 0;
+        }
+        100% {
+            transform: translateX(0) translateY(0);
+            opacity: 1;
+        }
+    }
+    
+    @keyframes slideFromTop {
+        0% {
+            transform: translateY(-100px);
+            opacity: 0;
+        }
+        100% {
+            transform: translateY(0);
+            opacity: 1;
+        }
+    }
+    
+    @keyframes slideFromRight {
+        0% {
+            transform: translateX(100px) translateY(-50px);
+            opacity: 0;
+        }
+        100% {
+            transform: translateX(0) translateY(0);
+            opacity: 1;
+        }
+    }
+    
     .contact-hero p {
         font-size: 1.2rem;
         margin-top: 10px;
+        opacity: 0;
+        animation: fadeInUp 1s ease-out 1s forwards;
+    }
+    
+    @keyframes fadeInUp {
+        0% {
+            transform: translateY(30px);
+            opacity: 0;
+        }
+        100% {
+            transform: translateY(0);
+            opacity: 1;
+        }
+    }
+    
+    /* Decorative floating elements */
+    .hero-decoration {
+        position: absolute;
+        font-size: 3rem;
+        opacity: 0;
+    }
+    
+    .deco-payment {
+        bottom: 15%;
+        left: 10%;
+        animation: floatInFromBottomLeft 1.2s ease-out 0.5s forwards;
+    }
+    
+    .deco-cup {
+        top: 20%;
+        right: 15%;
+        animation: floatInFromTopRight 1.2s ease-out 0.7s forwards;
+    }
+    
+    .deco-flower {
+        bottom: 20%;
+        right: 10%;
+        animation: floatInFromBottomRight 1.2s ease-out 0.9s forwards;
+    }
+    
+    @keyframes floatInFromBottomLeft {
+        0% {
+            transform: translate(-100px, 100px) rotate(-45deg);
+            opacity: 0;
+        }
+        100% {
+            transform: translate(0, 0) rotate(0deg);
+            opacity: 0.6;
+        }
+    }
+    
+    @keyframes floatInFromTopRight {
+        0% {
+            transform: translate(100px, -100px) rotate(45deg);
+            opacity: 0;
+        }
+        100% {
+            transform: translate(0, 0) rotate(0deg);
+            opacity: 0.6;
+        }
+    }
+    
+    @keyframes floatInFromBottomRight {
+        0% {
+            transform: translate(100px, 100px) rotate(45deg);
+            opacity: 0;
+        }
+        100% {
+            transform: translate(0, 0) rotate(0deg);
+            opacity: 0.6;
+        }
     }
 
     /* Main Container */
@@ -44,6 +178,8 @@
         border-radius: 15px;
         padding: 40px;
         box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+        opacity: 0;
+        animation: fadeInUp 0.8s ease-out 0.3s forwards;
     }
     .contact-form-section h2 {
         font-size: 2rem;
@@ -236,13 +372,34 @@
         .contact-hero h1 {
             font-size: 2rem;
         }
+        .hero-decoration {
+            font-size: 2rem;
+        }
+        .deco-payment {
+            left: 5%;
+        }
+        .deco-cup {
+            right: 5%;
+        }
+        .deco-flower {
+            right: 5%;
+        }
     }
 </style>
 
 <!-- Hero Section -->
 <section class="contact-hero">
-    <div>
-        <h1>Get In Touch</h1>
+    <!-- Decorative elements -->
+    <div class="hero-decoration deco-payment">💳</div>
+    <div class="hero-decoration deco-cup">☕</div>
+    <div class="hero-decoration deco-flower">🌸</div>
+    
+    <div class="hero-content">
+        <h1>
+            <span class="word-get">Get</span>
+            <span class="word-in">In</span>
+            <span class="word-touch">Touch</span>
+        </h1>
         <p>We'd love to hear from you!</p>
     </div>
 </section>
@@ -316,18 +473,17 @@
             <!-- Map -->
             <div class="map-section">
                 <h3>Find Us Here</h3>
-           <div class="map-placeholder" style="width: 100%; height: 400px; border-radius: 10px; overflow: hidden;">
-    <iframe
-        src="https://www.google.com/maps/embed?pb=!1m14!1m12!1m3!1d15958.372989210228!2d75.469428!3d11.8630032!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!5e0!3m2!1sen!2sin!4v1696947034567!5m2!1sen!2sin"
-        width="100%"
-        height="100%"
-        style="border:0;"
-        allowfullscreen=""
-        loading="lazy"
-        referrerpolicy="no-referrer-when-downgrade">
-    </iframe>
-</div>
-
+                <div class="map-placeholder" style="width: 100%; height: 400px; border-radius: 10px; overflow: hidden;">
+                    <iframe
+                        src="https://www.google.com/maps/embed?pb=!1m14!1m12!1m3!1d15958.372989210228!2d75.469428!3d11.8630032!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!5e0!3m2!1sen!2sin!4v1696947034567!5m2!1sen!2sin"
+                        width="100%"
+                        height="100%"
+                        style="border:0;"
+                        allowfullscreen=""
+                        loading="lazy"
+                        referrerpolicy="no-referrer-when-downgrade">
+                    </iframe>
+                </div>
             </div>
         </div>
     </div>

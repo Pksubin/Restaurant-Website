@@ -1,0 +1,11 @@
+{% extends 'base.html' %}
+{% block title %}Order Placed{% endblock %}
+{% block content %}
+<div class="container text-center py-5">
+    <h2 class="text-success mb-4">✅ Order Placed Successfully!</h2>
+    <p>Thank you, <strong>{{ order.customer_name }}</strong>.</p>
+    <p>Your order ID is <strong>#{{ order.id }}</strong>.</p>
+    <p>Status: <span class="badge bg-warning">{{ order.status }}</span></p>
+    <a href="{% url 'landing_menu' %}" class="btn btn-primary mt-3">Back to Menu</a>
+</div>
+{% endblock %}

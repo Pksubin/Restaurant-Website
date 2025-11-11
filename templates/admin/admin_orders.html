@@ -1,0 +1,328 @@
+{% extends 'admin/base.html' %}
+{% block title %}Orders{% endblock %}
+{% load static %}
+
+{% block content %}
+<style>
+/* 🌐 General Page Setup */
+.orders-page {
+  background: #f4f6f9;
+  min-height: 100vh;
+  padding: 40px 25px;
+  font-family: 'Poppins', sans-serif;
+}
+
+/* 🌟 Header Section */
+.orders-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  margin-bottom: 25px;
+  gap: 15px;
+}
+
+.orders-header h2 {
+  font-weight: 700;
+  font-size: 1.9rem;
+  color: #1c1c1c;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.orders-header h2::before {
+  content: "📦";
+  font-size: 1.8rem;
+}
+
+/* 🔸 Stats Card */
+.stat-card {
+  background: #ffffff;
+  border-left: 5px solid #ff6600;
+  border-radius: 12px;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.06);
+  padding: 12px 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.stat-card .stat-value {
+  color: #ff6600;
+  font-weight: 700;
+  font-size: 1.6rem;
+  line-height: 1;
+}
+
+.stat-card span:last-child {
+  color: #555;
+  font-size: 0.9rem;
+}
+
+/* 🌟 Main Container */
+.orders-container {
+  background: #fff;
+  border-radius: 16px;
+  padding: 30px;
+  box-shadow: 0 4px 25px rgba(0,0,0,0.05);
+  transition: 0.3s;
+}
+
+.orders-container:hover {
+  box-shadow: 0 8px 25px rgba(0,0,0,0.08);
+}
+
+/* 🔍 Filters */
+.filters-section {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 25px;
+  flex-wrap: wrap;
+}
+
+.filters-section select,
+.filters-section input {
+  border: 1.8px solid #ddd;
+  border-radius: 8px;
+  padding: 10px 14px;
+  font-size: 0.95rem;
+  background: #fafafa;
+  transition: all 0.25s;
+}
+
+.filters-section select:focus,
+.filters-section input:focus {
+  border-color: #ff6600;
+  box-shadow: 0 0 6px rgba(255,102,0,0.3);
+  background: #fff;
+}
+
+.filters-section button {
+  background: #ff6600;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  padding: 10px 20px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.filters-section button:hover {
+  background: #e55a00;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 10px rgba(255,102,0,0.3);
+}
+
+/* 📊 Table */
+.table-wrapper {
+  overflow-x: auto;
+}
+
+.table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0 10px;
+}
+
+.table thead th {
+  background-color: #ff7a00;
+  color: #fff;
+  text-transform: uppercase;
+  font-size: 0.9rem;
+  padding: 14px;
+  border: none;
+  text-align: left;
+}
+
+.table tbody tr {
+  background: #fff;
+  transition: all 0.25s ease;
+  border-radius: 8px;
+  box-shadow: 0 1px 6px rgba(0,0,0,0.05);
+}
+
+.table tbody tr:hover {
+  transform: scale(1.01);
+  background: #fff8f2;
+  box-shadow: 0 3px 10px rgba(255,102,0,0.15);
+}
+
+.table td {
+  padding: 14px 16px;
+  color: #333;
+}
+
+/* 🟢 Status Badges */
+.badge {
+  display: inline-block;
+  padding: 6px 14px;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+.badge-pending {
+  background: #fff3cd;
+  color: #856404;
+}
+.badge-processed {
+  background: #d4edda;
+  color: #155724;
+}
+.badge-cancelled {
+  background: #f8d7da;
+  color: #721c24;
+}
+
+/* ⚙️ Actions */
+.row-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.btn-action {
+  border: none;
+  border-radius: 6px;
+  padding: 8px 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.btn-view {
+  background: #007bff;
+  color: #fff;
+}
+.btn-view:hover {
+  background: #0056b3;
+  transform: translateY(-2px);
+}
+
+.btn-edit {
+  background: #ffc107;
+  color: #333;
+}
+.btn-edit:hover {
+  background: #e0a800;
+  transform: translateY(-2px);
+}
+
+/* 🚫 Empty State */
+.empty-state {
+  text-align: center;
+  padding: 60px 20px;
+}
+.empty-state i {
+  font-size: 4rem;
+  color: #ccc;
+}
+.empty-state p {
+  color: #777;
+  font-size: 1.1rem;
+  margin-top: 10px;
+}
+
+/* 📱 Responsive */
+@media (max-width: 768px) {
+  .orders-page { padding: 20px; }
+  .orders-header h2 { font-size: 1.6rem; }
+  .filters-section { flex-direction: column; }
+  .filters-section select, .filters-section input, .filters-section button {
+    width: 100%;
+  }
+}
+</style>
+
+<div class="orders-page">
+  <div class="orders-header">
+   <h2 style="color:#ff7a00; font-weight:700; letter-spacing:0.5px;"> Orders Management</h2>
+
+   <div class="stat-card" style="background-color:#ff7a00; color:white; border-radius:10px;">
+  <span class="stat-value text-white" style="color:rgb(255, 255, 255);">{{ orders|length }}</span>
+  <span class="text-white" style="color:white;">Total Orders</span>
+</div>
+
+  </div>
+
+  <div class="orders-container">
+    {% if orders %}
+      <div class="filters-section">
+        <select id="statusFilter" onchange="filterOrders()">
+          <option value="">All Status</option>
+          <option value="pending">⏳ Pending</option>
+          <option value="processed">✓ Processed</option>
+          <option value="cancelled">✕ Cancelled</option>
+        </select>
+        <input type="text" id="searchOrder" placeholder="🔍 Search Order ID or Customer..." onkeyup="filterOrders()">
+        <button onclick="resetFilters()">↻ Reset</button>
+      </div>
+
+      <div class="table-wrapper">
+        <table id="ordersTable" class="table">
+          <thead>
+            <tr>
+              <th>Order ID</th>
+              <th>Customer</th>
+              <th>Date</th>
+              <th>Items</th>
+              <th>Total</th>
+              <th>Status</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for order in orders %}
+              <tr data-status="{{ order.status|lower }}" data-search="{{ order.id }} {{ order.customer_name|lower }}">
+                <td class="order-id">#{{ order.id }}</td>
+                <td class="customer-name">{{ order.customer_name }}</td>
+                <td>{{ order.order_date|date:"M d, Y" }}</td>
+                <td><span>{{ order.items.all|length }} item{{ order.items.all|length|pluralize }}</span></td>
+                <td class="price">₹{{ order.total_price }}</td>
+                <td>
+                  {% if order.status == 'Pending' %}
+                    <span class="badge badge-pending">⏳ Pending</span>
+                  {% elif order.status == 'Processed' %}
+                    <span class="badge badge-processed">✓ Processed</span>
+                  {% else %}
+                    <span class="badge badge-cancelled">✕ Cancelled</span>
+                  {% endif %}
+                </td>
+                <td>
+                  <div class="row-actions">
+                    <button class="btn-action btn-view">View</button>
+                    <button class="btn-action btn-edit">Edit</button>
+                  </div>
+                </td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    {% else %}
+      <div class="empty-state">
+        <i class="bi bi-inbox"></i>
+        <p>No orders found yet</p>
+      </div>
+    {% endif %}
+  </div>
+</div>
+
+<script>
+function filterOrders() {
+  const status = document.getElementById('statusFilter').value.toLowerCase();
+  const search = document.getElementById('searchOrder').value.toLowerCase();
+  document.querySelectorAll('#ordersTable tbody tr').forEach(row => {
+    const match = (!status || row.dataset.status === status) &&
+                  (!search || row.dataset.search.includes(search));
+    row.style.display = match ? '' : 'none';
+  });
+}
+function resetFilters() {
+  document.getElementById('statusFilter').value = '';
+  document.getElementById('searchOrder').value = '';
+  filterOrders();
+}
+</script>
+{% endblock %}
